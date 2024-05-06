@@ -1,10 +1,10 @@
 {
   "name": "cloud-text-to-speech",
   "description": "Single interface to Google, Microsoft and Amazon Text-To-Speech.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
-    "url": "https://github.com/markokosticdev/cloud_text_to_speech_nodejs"
+    "url": "git+https://github.com/markokosticdev/cloud_text_to_speech_nodejs.git"
   },
   "type": "module",
   "engines": {
@@ -53,6 +53,8 @@
   "volta": {
     "node": "20.12.2"
   },
+  "main": "build/src/main.js",
+  "types": "build/src/main.d.ts",
   "files": [
     "build/src/**/*"
   ],
