@@ -194,15 +194,15 @@ export class TtsUniversal {
 
     if (!TtsUniversal._initDone) {
       if (google) {
-        TtsGoogle.init(google);
+        TtsGoogle.init({ params: google, withLogs });
         initializedProviders.push(TtsProviders.google);
       }
       if (microsoft) {
-        TtsMicrosoft.init(microsoft);
+        TtsMicrosoft.init({ params: microsoft, withLogs });
         initializedProviders.push(TtsProviders.microsoft);
       }
       if (amazon) {
-        TtsAmazon.init(amazon);
+        TtsAmazon.init({ params: amazon, withLogs });
         initializedProviders.push(TtsProviders.amazon);
       }
 
