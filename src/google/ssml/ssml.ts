@@ -77,7 +77,6 @@ export class SsmlGoogle {
       ],
       seq: [],
       sub: ['alias'],
-      voice: ['name', 'gender', 'variant', 'language', 'ordering'],
     };
 
     return Helpers.sanitizeSsml(ssml, allowedElements);

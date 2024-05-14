@@ -64,7 +64,6 @@ export class SsmlMicrosoft {
       s: [],
       'say-as': ['interpret-as', 'format', 'detail'],
       sub: ['alias'],
-      voice: ['name', 'effect'],
     };
 
     return Helpers.sanitizeSsml(ssml, allowedElements);
