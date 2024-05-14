@@ -1,9 +1,9 @@
 # Cloud Text-To-Speech
 
-![Npm Version](https://img.shields.io/npm/v/cloud-text-to-speech.svg?logo=npm)
-![Npm Downloads Total](https://img.shields.io/npm/dt/cloud-text-to-speech.svg?logo=npm)
-![Npm Downloads Week](https://img.shields.io/npm/dw/cloud-text-to-speech.svg?logo=npm)
-![GitHub](https://img.shields.io/github/license/markokosticdev/cloud_text_to_speech_nodejs.svg?logo=github)
+[![Npm Version](https://img.shields.io/npm/v/cloud-text-to-speech.svg?logo=npm)](https://www.npmjs.com/package/cloud-text-to-speech)
+[![Npm Downloads Total](https://img.shields.io/npm/dt/cloud-text-to-speech.svg?logo=npm)](https://www.npmjs.com/package/cloud-text-to-speech)
+[![Npm Downloads Week](https://img.shields.io/npm/dw/cloud-text-to-speech.svg?logo=npm)](https://www.npmjs.com/package/cloud-text-to-speech)
+[![GitHub License](https://img.shields.io/github/license/markokosticdev/cloud_text_to_speech_nodejs.svg?logo=github)](https://github.com/markokosticdev/cloud_text_to_speech_nodejs?tab=BSD-2-Clause-1-ov-file)
 [![GitHub Sponsor](https://img.shields.io/badge/GitHub%20Sponsor-donate-yellow.svg?logo=github)](https://github.com/sponsors/markokosticdev)
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-donate-yellow.svg?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/markokostich)
 
