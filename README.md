@@ -25,11 +25,14 @@ NodeJS implementation of:
 
 ## Feature Requests
 
-We welcome and value your ideas and suggestions to improve this project! To submit and vote for feature requests, please visit our [Feature Requests Board](https://cloud-text-to-speech.featureupvote.com).
+We welcome and value your ideas and suggestions to improve this project! To submit and vote for feature requests, please
+visit our [Feature Requests Board](https://cloud-text-to-speech.featureupvote.com).
 
 On the board, you can:
+
 - **Submit new feature requests**: Share your ideas on how we can enhance the project.
-- **Vote on existing requests**: Help prioritize the most popular features by voting for the ones you find most valuable.
+- **Vote on existing requests**: Help prioritize the most popular features by voting for the ones you find most
+  valuable.
 
 Thank you for contributing to the development and improvement of Cloud Text-To-Speech!
 
@@ -38,7 +41,8 @@ Thank you for contributing to the development and improvement of Cloud Text-To-S
 There are essentially two ways to use Cloud Text-To-Speech:
 
 - **Universal**: Using TtsUniversal to be able to configure the TTS provider dynamically and us it.
-    - **Single**: Using `TtsProviders.google`, `TtsProviders.microsoft`, `TtsProviders.amazon` to use the single provider at a time.
+    - **Single**: Using `TtsProviders.google`, `TtsProviders.microsoft`, `TtsProviders.amazon` to use the single
+      provider at a time.
     - **Combine**: Using `TtsProviders.combine` to combine all providers and get all voices at once.
 - **Provider**: Using TtsGoogle, TtsMicrosoft, TtsAmazon to get the most from provider's API.
 
@@ -280,8 +284,8 @@ const ttsParams = new TtsParamsAmazon({
   voice: voice,
   audioFormat: AudioOutputFormatAmazon.mp3,
   text: text,
-  rate: 'slow', // optional
-  pitch: 'default', // optional
+  rate: 'slow',
+  pitch: 'default',
 });
 
 const ttsResponse = await TtsAmazon.convertTts(ttsParams);

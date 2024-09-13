@@ -1,4 +1,7 @@
-import { TtsUniversal } from '../src/universal/tts/tts.js';
+import {
+  TtsAudioOptionsUniversal,
+  TtsUniversal,
+} from '../src/universal/tts/tts.js';
 import { TtsProviders } from '../src/common/tts/tts_providers.js';
 import { TtsParamsUniversal } from '../src/universal/tts/tts_params.js';
 import { AudioOutputFormatUniversal } from '../src/universal/audio/audio_output_format.js';
@@ -27,7 +30,7 @@ async function main(): Promise<void> {
     for (const provider of [
       TtsProviders.amazon,
       TtsProviders.microsoft,
-      TtsProviders.google
+      TtsProviders.google,
     ]) {
       TtsUniversal.setProvider(provider);
 
@@ -43,10 +46,12 @@ async function main(): Promise<void> {
 
       const ttsParams = new TtsParamsUniversal({
         voice: voice,
-        audioFormat: AudioOutputFormatUniversal.mp3_64k,
         text: text,
-        rate: 'slow', //optional
-        pitch: 'default', //optional
+        rate: 'slow',
+        pitch: 'default',
+        audioOptions: new TtsAudioOptionsUniversal({
+          audioFormat: AudioOutputFormatUniversal.mp3_32k,
+        }),
       });
 
       const ttsResponse = await TtsUniversal.convertTts(ttsParams);

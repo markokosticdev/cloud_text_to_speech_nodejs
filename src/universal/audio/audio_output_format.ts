@@ -1,14 +1,11 @@
-export class AudioOutputFormatUniversal {
-  public static readonly pcm16Bit8KhzMono: string = 'pcm-16bit-8khz-mono';
-  public static readonly pcm16Bit16KhzMono: string = 'pcm-16bit-16khz-mono';
-  public static readonly pcm16Bit24KhzMono: string = 'pcm-16bit-24khz-mono';
-  public static readonly mp3_32k: string = 'mp3-32k';
-  public static readonly mp3_64k: string = 'mp3-64k';
-  public static readonly mp3_128k: string = 'mp3-128k';
-  // public static readonly oggVorbis : string = "ogg-vorbis";
-  public static readonly mulaw: string = 'mulaw';
-
-  // public static readonly alaw : string = "alaw";
-
-  private constructor() {}
+export enum AudioOutputFormatUniversal {
+  pcm16Bit8KhzMono = 'pcm-16bit-8khz-mono',
+  pcm16Bit16KhzMono = 'pcm-16bit-16khz-mono',
+  pcm16Bit24KhzMono = 'pcm-16bit-24khz-mono',
+  mp3_32k = 'mp3-32k',
+  mp3_64k = 'mp3-64k',
+  mp3_128k = 'mp3-128k',
+  // oggVorbis = 'ogg-vorbis',
+  mulaw = 'mulaw',
+  // alaw = 'alaw',
 }

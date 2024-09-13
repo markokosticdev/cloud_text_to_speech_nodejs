@@ -12,6 +12,10 @@ import { TtsParamsMapper } from './tts_params_mapper.js';
 import { Log } from '../../common/utils/log.js';
 import { Helpers } from '../../common/utils/helpers.js';
 
+export * from './tts_audio_options.js';
+export * from './tts_process_options.js';
+export * from './tts_ssml_options.js';
+
 export class TtsUniversal {
   private static _provider: string;
   private static _initDone: boolean = false;

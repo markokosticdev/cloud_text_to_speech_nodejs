@@ -18,7 +18,6 @@ export class AudioClientGoogle extends BaseClient {
     requestConfig.headers = requestConfig.headers || {};
     requestConfig.headers[this.header.type] = this.header.headerValue;
     requestConfig.headers['Content-Type'] = 'application/json';
-
     return await this.client.request(requestConfig);
   }
 }

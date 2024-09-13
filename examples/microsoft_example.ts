@@ -1,6 +1,7 @@
 import { TtsMicrosoft } from '../src/microsoft/tts/tts.js';
 import { TtsParamsMicrosoft } from '../src/microsoft/tts/tts_params.js';
 import { AudioOutputFormatMicrosoft } from '../src/microsoft/audio/audio_output_format.js';
+import { TtsAudioOptionsMicrosoft } from '../src/microsoft/tts/tts_audio_options.js';
 
 async function main(): Promise<void> {
   try {
@@ -25,10 +26,12 @@ async function main(): Promise<void> {
 
     const ttsParams = new TtsParamsMicrosoft({
       voice: voice,
-      audioFormat: AudioOutputFormatMicrosoft.audio48Khz192kBitrateMonoMp3,
       text: text,
-      rate: 'slow', // optional
-      pitch: 'default', // optional
+      rate: 'slow',
+      pitch: 'default',
+      audioOptions: new TtsAudioOptionsMicrosoft({
+        audioFormat: AudioOutputFormatMicrosoft.audio16Khz32kBitrateMonoMp3,
+      }),
     });
 
     const ttsResponse = await TtsMicrosoft.convertTts(ttsParams);

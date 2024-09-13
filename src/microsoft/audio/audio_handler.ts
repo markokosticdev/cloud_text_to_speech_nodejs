@@ -1,4 +1,3 @@
-import { AudioRequestParamsMicrosoft } from './audio_request_param.js';
 import { AuthenticationHeaderMicrosoft } from '../auth/authentication_types.js';
 import { AudioSuccessMicrosoft } from './audio_responses.js';
 import axios, { AxiosInstance } from 'axios';
@@ -9,34 +8,67 @@ import { VoicesClientMicrosoft } from '../voices/voices_client.js';
 import { AudioClientMicrosoft } from './audio_client.js';
 import { BaseResponse } from '../../common/http/base_response.js';
 import { AudioTypeHeaderMicrosoft } from './audio_type_header.js';
+import { TtsParamsMicrosoft } from '../tts/tts_params.js';
+import { AudioHandler } from '../../common/audio/audio_header.js';
+import { AudioJoiner } from '../../common/audio/audio_joiner.js';
 
 export class AudioHandlerMicrosoft {
   async getAudio(
-    params: AudioRequestParamsMicrosoft,
+    params: TtsParamsMicrosoft,
     authHeader: AuthenticationHeaderMicrosoft,
   ): Promise<AudioSuccessMicrosoft> {
     const client: AxiosInstance = axios.create();
     const audioClient: VoicesClientMicrosoft = new AudioClientMicrosoft(
       client,
       authHeader,
-      new AudioTypeHeaderMicrosoft(params.audioFormat),
+      new AudioTypeHeaderMicrosoft(params.audioOptions.audioFormat),
     );
     const mapper: AudioResponseMapperMicrosoft =
       new AudioResponseMapperMicrosoft();
 
-    try {
-      const ssml = new SsmlMicrosoft({
-        text: params.text,
-        rate: params.rate,
-        pitch: params.pitch,
-        voice: params.voice,
-      });
+    const ssml = new SsmlMicrosoft({
+      ssml: params.text,
+      rate: params.rate,
+      pitch: params.pitch,
+      voice: params.voice,
+      options: params.ssmlOptions,
+    });
 
+    let audioSuccesses: AudioSuccessMicrosoft[];
+
+    if (params.processOptions.processAsync) {
+      audioSuccesses = await AudioHandler.handleAsync<AudioSuccessMicrosoft>(
+        ssml.processedSsmlBatches(),
+        async (ssml) => {
+          return await this.processItem(ssml, mapper, audioClient);
+        },
+        params.processOptions.processLimit,
+      );
+    } else {
+      audioSuccesses = await AudioHandler.handleSync<AudioSuccessMicrosoft>(
+        ssml.processedSsmlBatches(),
+        async (ssml) => {
+          return await this.processItem(ssml, mapper, audioClient);
+        },
+      );
+    }
+
+    const audios = audioSuccesses.map((item) => item.audio);
+
+    return new AudioSuccessMicrosoft(AudioJoiner.join(audios));
+  }
+
+  async processItem(
+    ssml: string,
+    mapper: AudioResponseMapperMicrosoft,
+    audioClient: VoicesClientMicrosoft,
+  ): Promise<AudioSuccessMicrosoft> {
+    try {
       const response = await audioClient.send({
         url: EndpointsMicrosoft.tts,
-        data: ssml.sanitizedSsml,
-        responseType: 'arraybuffer',
+        data: ssml,
         method: 'POST',
+        responseType: 'arraybuffer',
       });
 
       const audioResponse: BaseResponse = mapper.map(response);

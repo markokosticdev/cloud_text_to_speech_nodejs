@@ -3,8 +3,38 @@ import { AudioOutputFormatGoogle } from '../../google/audio/audio_output_format.
 import { AudioOutputFormatMicrosoft } from '../../microsoft/audio/audio_output_format.js';
 import { AudioOutputFormatAmazon } from '../../amazon/audio/audio_output_format.js';
 
-export class AudioOutputFormatMapper {
-  static toGoogle(universalFormat: AudioOutputFormatUniversal): string {
+export type AudioFormatMapperGoogle = (
+  universalFormat: AudioOutputFormatUniversal,
+) => AudioOutputFormatGoogle;
+export type AudioFormatMapperMicrosoft = (
+  universalFormat: AudioOutputFormatUniversal,
+) => AudioOutputFormatMicrosoft;
+export type AudioFormatMapperAmazon = (
+  universalFormat: AudioOutputFormatUniversal,
+) => AudioOutputFormatAmazon;
+
+export class AudioOutputFormatMapperUniversal {
+  mapperGoogle: AudioFormatMapperGoogle | undefined;
+  mapperMicrosoft: AudioFormatMapperMicrosoft | undefined;
+  mapperAmazon: AudioFormatMapperAmazon | undefined;
+
+  constructor({
+    mapperGoogle,
+    mapperMicrosoft,
+    mapperAmazon,
+  }: {
+    mapperGoogle?: AudioFormatMapperGoogle;
+    mapperMicrosoft?: AudioFormatMapperMicrosoft;
+    mapperAmazon?: AudioFormatMapperAmazon;
+  } = {}) {
+    this.mapperGoogle = mapperGoogle;
+    this.mapperMicrosoft = mapperMicrosoft;
+    this.mapperAmazon = mapperAmazon;
+  }
+
+  static defaultToGoogle(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatGoogle {
     switch (universalFormat) {
       case AudioOutputFormatUniversal.pcm16Bit8KhzMono:
       case AudioOutputFormatUniversal.pcm16Bit16KhzMono:
@@ -25,7 +55,9 @@ export class AudioOutputFormatMapper {
     }
   }
 
-  static toMicrosoft(universalFormat: AudioOutputFormatUniversal): string {
+  static defaultToMicrosoft(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatMicrosoft {
     switch (universalFormat) {
       case AudioOutputFormatUniversal.pcm16Bit8KhzMono:
         return AudioOutputFormatMicrosoft.raw8Khz8BitMonoMulaw;
@@ -50,7 +82,9 @@ export class AudioOutputFormatMapper {
     }
   }
 
-  static toAmazon(universalFormat: AudioOutputFormatUniversal): string {
+  static defaultToAmazon(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatAmazon {
     switch (universalFormat) {
       case AudioOutputFormatUniversal.pcm16Bit8KhzMono:
       case AudioOutputFormatUniversal.pcm16Bit16KhzMono:
@@ -68,5 +102,32 @@ export class AudioOutputFormatMapper {
       default:
         throw new Error(`Format ${universalFormat} is not supported`);
     }
+  }
+
+  toGoogle(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatGoogle {
+    if (this.mapperGoogle) {
+      return this.mapperGoogle(universalFormat);
+    }
+    return AudioOutputFormatMapperUniversal.defaultToGoogle(universalFormat);
+  }
+
+  toMicrosoft(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatMicrosoft {
+    if (this.mapperMicrosoft) {
+      return this.mapperMicrosoft(universalFormat);
+    }
+    return AudioOutputFormatMapperUniversal.defaultToMicrosoft(universalFormat);
+  }
+
+  toAmazon(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatAmazon {
+    if (this.mapperAmazon) {
+      return this.mapperAmazon(universalFormat);
+    }
+    return AudioOutputFormatMapperUniversal.defaultToAmazon(universalFormat);
   }
 }

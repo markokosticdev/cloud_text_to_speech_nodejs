@@ -1,6 +1,7 @@
 import { TtsGoogle } from '../src/google/tts/tts.js';
 import { TtsParamsGoogle } from '../src/google/tts/tts_params.js';
 import { AudioOutputFormatGoogle } from '../src/google/audio/audio_output_format.js';
+import { TtsAudioOptionsGoogle } from '../src/google/tts/tts_audio_options.js';
 
 async function main(): Promise<void> {
   try {
@@ -25,10 +26,12 @@ async function main(): Promise<void> {
 
     const ttsParams = new TtsParamsGoogle({
       voice: voice,
-      audioFormat: AudioOutputFormatGoogle.mp3,
       text: text,
-      rate: 'slow', // optional
-      pitch: 'default', // optional
+      rate: 'slow',
+      pitch: 'default',
+      audioOptions: new TtsAudioOptionsGoogle({
+        audioFormat: AudioOutputFormatGoogle.mp3,
+      }),
     });
 
     const ttsResponse = await TtsGoogle.convertTts(ttsParams);
