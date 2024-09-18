@@ -1,9 +1,9 @@
-import { VoiceUniversal } from '../../universal/voices/voice_model.js';
 import { VoiceLocale } from '../../common/locale/locale_model.js';
 import { TtsProviders } from '../../common/tts/tts_providers.js';
 import { VoiceLocaleHelpers } from '../../common/locale/locale_helpers.js';
+import { VoiceBase } from '../../common/voices/voices_base.js';
 
-export class VoiceMicrosoft extends VoiceUniversal {
+export class VoiceMicrosoft extends VoiceBase {
   sampleRateHertz?: string;
   styleList?: string[];
   status?: string;

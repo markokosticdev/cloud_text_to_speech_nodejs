@@ -1,7 +1,7 @@
 import { TtsMicrosoft } from '../src/microsoft/tts/tts.js';
-import { TtsParamsMicrosoft } from '../src/microsoft/tts/tts_params.js';
-import { AudioOutputFormatMicrosoft } from '../src/microsoft/audio/audio_output_format.js';
-import { TtsAudioOptionsMicrosoft } from '../src/microsoft/tts/tts_audio_options.js';
+import { ConvertParamsMicrosoft } from '../src/microsoft/convert/convert_params.js';
+import { AudioOutputFormatMicrosoft } from '../src/microsoft/convert/audio/audio_output_format.js';
+import { ConvertAudioOptionsMicrosoft } from '../src/microsoft/convert/convert_audio_options.js';
 
 async function main(): Promise<void> {
   try {
@@ -24,12 +24,12 @@ async function main(): Promise<void> {
     const text =
       '<break time="2s" bre="34"/>Microsoft <some time="3s"/> Text-to-Speech API is awesome';
 
-    const ttsParams = new TtsParamsMicrosoft({
+    const ttsParams = new ConvertParamsMicrosoft({
       voice: voice,
       text: text,
       rate: 'slow',
       pitch: 'default',
-      audioOptions: new TtsAudioOptionsMicrosoft({
+      audioOptions: new ConvertAudioOptionsMicrosoft({
         audioFormat: AudioOutputFormatMicrosoft.audio16Khz32kBitrateMonoMp3,
       }),
     });

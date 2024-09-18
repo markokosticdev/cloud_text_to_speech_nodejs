@@ -1,10 +1,10 @@
 import {
-  TtsAudioOptionsUniversal,
+  ConvertAudioOptionsUniversal,
   TtsUniversal,
 } from '../src/universal/tts/tts.js';
 import { TtsProviders } from '../src/common/tts/tts_providers.js';
-import { TtsParamsUniversal } from '../src/universal/tts/tts_params.js';
-import { AudioOutputFormatUniversal } from '../src/universal/audio/audio_output_format.js';
+import { ConvertParamsUniversal } from '../src/universal/convert/convert_params.js';
+import { AudioOutputFormatUniversal } from '../src/universal/convert/audio/audio_output_format.js';
 
 async function main(): Promise<void> {
   try {
@@ -37,12 +37,12 @@ async function main(): Promise<void> {
     const text =
       '<break time="2s" bre="34"/>Combine Universal <some time="3s"/> Text-to-Speech API is awesome';
 
-    const ttsParams = new TtsParamsUniversal({
+    const ttsParams = new ConvertParamsUniversal({
       voice: voice,
       text: text,
       rate: 'slow',
       pitch: 'default',
-      audioOptions: new TtsAudioOptionsUniversal({
+      audioOptions: new ConvertAudioOptionsUniversal({
         audioFormat: AudioOutputFormatUniversal.mp3_32k,
       }),
     });

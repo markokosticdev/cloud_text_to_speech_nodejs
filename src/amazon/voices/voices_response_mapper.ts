@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { BaseResponseMapper } from '../../common/http/base_response_mapper.js';
-import { VoiceAmazon } from './voice_model.js';
+import { VoiceAmazon } from './voices_model.js';
 import { Helpers } from '../../common/utils/helpers.js';
 import {
   VoicesFailedBadGateWayAmazon,
@@ -10,7 +10,7 @@ import {
   VoicesFailedUnknownErrorAmazon,
   VoicesSuccessAmazon,
 } from './voices_responses.js';
-import { VoiceNames } from '../../common/other/voice_names.js';
+import { VoiceNames } from '../../common/voices/voices_names.js';
 import { BaseResponse } from '../../common/http/base_response.js';
 
 export class VoicesResponseMapperAmazon implements BaseResponseMapper {

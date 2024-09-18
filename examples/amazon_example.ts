@@ -1,7 +1,7 @@
 import { TtsAmazon } from '../src/amazon/tts/tts.js';
-import { TtsParamsAmazon } from '../src/amazon/tts/tts_params.js';
-import { AudioOutputFormatAmazon } from '../src/amazon/audio/audio_output_format.js';
-import { TtsAudioOptionsAmazon } from '../src/amazon/tts/tts_audio_options.js';
+import { ConvertParamsAmazon } from '../src/amazon/convert/convert_params.js';
+import { AudioOutputFormatAmazon } from '../src/amazon/convert/audio/audio_output_format.js';
+import { ConvertAudioOptionsAmazon } from '../src/amazon/convert/convert_audio_options.js';
 
 async function main(): Promise<void> {
   try {
@@ -24,12 +24,12 @@ async function main(): Promise<void> {
     const text =
       '<break time="2s" bre="34"/>Amazon <some time="3s"/> Text-to-Speech API is awesome';
 
-    const ttsParams = new TtsParamsAmazon({
+    const ttsParams = new ConvertParamsAmazon({
       voice: voice,
       text: text,
       rate: 'slow',
       pitch: 'default',
-      audioOptions: new TtsAudioOptionsAmazon({
+      audioOptions: new ConvertAudioOptionsAmazon({
         audioFormat: AudioOutputFormatAmazon.mp3,
       }),
     });

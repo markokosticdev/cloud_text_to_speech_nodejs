@@ -6,15 +6,14 @@ import { TtsProviders } from '../../common/tts/tts_providers.js';
 import { TtsGoogle } from '../../google/tts/tts.js';
 import { TtsMicrosoft } from '../../microsoft/tts/tts.js';
 import { TtsAmazon } from '../../amazon/tts/tts.js';
-import { TtsParamsUniversal } from './tts_params.js';
-import { AudioSuccessUniversal } from '../audio/audio_responses.js';
-import { TtsParamsMapper } from './tts_params_mapper.js';
+import { ConvertParamsUniversal } from '../convert/convert_params.js';
+import { AudioSuccessUniversal } from '../convert/audio/audio_responses.js';
+import { ConvertParamsMapper } from '../convert/convert_params_mapper.js';
 import { Log } from '../../common/utils/log.js';
 import { Helpers } from '../../common/utils/helpers.js';
 
-export * from './tts_audio_options.js';
-export * from './tts_process_options.js';
-export * from './tts_ssml_options.js';
+export * from '../convert/convert_audio_options.js';
+export * from '../convert/convert_process_options.js';
 
 export class TtsUniversal {
   private static _provider: string;
@@ -124,24 +123,24 @@ export class TtsUniversal {
 
   ///
   static async convertTts(
-    params: TtsParamsUniversal,
+    params: ConvertParamsUniversal,
   ): Promise<AudioSuccessUniversal> {
     return TtsUniversal.handleProvider<Promise<AudioSuccessUniversal>>({
       google: async () => {
         const audio = await TtsGoogle.convertTts(
-          TtsParamsMapper.toGoogle(params),
+          ConvertParamsMapper.toGoogle(params),
         );
         return new AudioSuccessUniversal(audio.audio, audio.code, audio.reason);
       },
       microsoft: async () => {
         const audio = await TtsMicrosoft.convertTts(
-          TtsParamsMapper.toMicrosoft(params),
+          ConvertParamsMapper.toMicrosoft(params),
         );
         return new AudioSuccessUniversal(audio.audio, audio.code, audio.reason);
       },
       amazon: async () => {
         const audio = await TtsAmazon.convertTts(
-          TtsParamsMapper.toAmazon(params),
+          ConvertParamsMapper.toAmazon(params),
         );
         return new AudioSuccessUniversal(audio.audio, audio.code, audio.reason);
       },

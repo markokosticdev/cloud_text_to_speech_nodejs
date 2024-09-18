@@ -10,7 +10,7 @@ import {
   VoicesFailedUnknownErrorMicrosoft,
   VoicesSuccessMicrosoft,
 } from './voices_responses.js';
-import { VoiceNames } from '../../common/other/voice_names.js';
+import { VoiceNames } from '../../common/voices/voices_names.js';
 import { BaseResponse } from '../../common/http/base_response.js';
 
 export class VoicesResponseMapperMicrosoft implements BaseResponseMapper {

@@ -1,12 +1,12 @@
 // Assuming necessary imports are done above
-import { AudioHandlerMicrosoft } from "../audio/audio_handler.js";
+import { AudioHandlerMicrosoft } from "../convert/audio/audio_handler.js";
 import { VoicesHandlerMicrosoft } from "../voices/voices_handler.js";
 import { RepositoryMicrosoft } from "./tts_repository.js";
 import { InitParamsMicrosoft } from "../common/init.js";
 import { ConfigMicrosoft } from "../common/config.js";
 import { Log } from "../../common/utils/log.js";
-import { TtsParamsMicrosoft } from "./tts_params.js";
-import { AudioSuccessMicrosoft } from "../audio/audio_responses.js";
+import { ConvertParamsMicrosoft } from "../convert/convert_params.js";
+import { AudioSuccessMicrosoft } from "../convert/audio/audio_responses.js";
 import { VoicesSuccessMicrosoft } from "../voices/voices_responses.js";
 
 ///Helper class for Microsoft TTS requests
@@ -71,7 +71,7 @@ export class TtsMicrosoft {
 
   ///
   public static async convertTts(
-    ttsParams: TtsParamsMicrosoft,
+    ttsParams: ConvertParamsMicrosoft,
   ): Promise<AudioSuccessMicrosoft> {
     return TtsMicrosoft.repo.convertTts(ttsParams);
   }

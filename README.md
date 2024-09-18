@@ -87,7 +87,7 @@ To convert TTS and get audio use:
 //Generate Audio for a text
 const text = "Amazon, Microsoft and Google Text-to-Speech API are awesome";
 
-const ttsParams = new TtsParamsUniversal({
+const ttsParams = new ConvertParamsUniversal({
   voice: voice,
   audioFormat: AudioOutputFormatUniversal.mp3_64k,
   text: text,
@@ -142,7 +142,7 @@ To convert TTS and get audio use:
 //Generate Audio for a text
 const text = "Amazon, Microsoft and Google Text-to-Speech API are awesome";
 
-const ttsParams = new TtsParamsUniversal({
+const ttsParams = new ConvertParamsUniversal({
   voice: voice,
   audioFormat: AudioOutputFormatUniversal.mp3_64k,
   text: text,
@@ -188,7 +188,7 @@ To convert TTS and get audio use:
 //Generate Audio for a text
 const text = '<speak>Google<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
 
-const ttsParams = new TtsParamsGoogle({
+const ttsParams = new ConvertParamsGoogle({
   voice: voice,
   audioFormat: AudioOutputFormatGoogle.mp3,
   text: text,
@@ -234,7 +234,7 @@ To convert TTS and get audio use:
 //Generate Audio for a text
 const text = '<speak>Microsoft<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
 
-const ttsParams = new TtsParamsMicrosoft({
+const ttsParams = new ConvertParamsMicrosoft({
   voice: voice,
   audioFormat: AudioOutputFormatMicrosoft.audio48Khz192kBitrateMonoMp3,
   text: text,
@@ -280,7 +280,7 @@ To convert TTS and get audio use:
 //Generate Audio for a text
 const text = '<speak>Amazon<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
 
-const ttsParams = new TtsParamsAmazon({
+const ttsParams = new ConvertParamsAmazon({
   voice: voice,
   audioFormat: AudioOutputFormatAmazon.mp3,
   text: text,

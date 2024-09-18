@@ -1,10 +1,10 @@
 import { VoicesHandlerMicrosoft } from "../voices/voices_handler.js";
-import { AudioHandlerMicrosoft } from "../audio/audio_handler.js";
+import { AudioHandlerMicrosoft } from "../convert/audio/audio_handler.js";
 import { VoicesSuccessMicrosoft } from "../voices/voices_responses.js";
 import { SubscriptionKeyAuthenticationHeaderMicrosoft } from "../auth/authentication_types.js";
 import { ConfigMicrosoft } from "../common/config.js";
-import { TtsParamsMicrosoft } from "./tts_params.js";
-import { AudioSuccessMicrosoft } from "../audio/audio_responses.js";
+import { ConvertParamsMicrosoft } from "../convert/convert_params.js";
+import { AudioSuccessMicrosoft } from "../convert/audio/audio_responses.js";
 
 ///Implements repository pattern to access Microsoft resources
 export class RepositoryMicrosoft {
@@ -48,7 +48,7 @@ export class RepositoryMicrosoft {
   /// [AudioFailedBadRequestMicrosoft], [AudioFailedUnauthorizedMicrosoft], [AudioFailedUnsupportedMicrosoft], [AudioFailedTooManyRequestMicrosoft],
   /// [AudioFailedBadGatewayMicrosoft], [AudioFailedBadGatewayMicrosoft], [AudioFailedUnknownErrorMicrosoft] or [AzureExceptionMicrosoft]
   async convertTts(
-    ttsParams: TtsParamsMicrosoft,
+    ttsParams: ConvertParamsMicrosoft,
   ): Promise<AudioSuccessMicrosoft> {
     return await this.audioHandler.getAudio(
       ttsParams,

@@ -1,10 +1,10 @@
 import { VoicesHandlerGoogle } from "../voices/voices_handler.js";
-import { AudioHandlerGoogle } from "../audio/audio_handler.js";
+import { AudioHandlerGoogle } from "../convert/audio/audio_handler.js";
 import { VoicesSuccessGoogle } from "../voices/voices_responses.js";
 import { ApiKeyAuthenticationHeaderGoogle } from "../auth/authentication_types.js";
 import { ConfigGoogle } from "../common/config.js";
-import { TtsParamsGoogle } from "./tts_params.js";
-import { AudioSuccessGoogle } from "../audio/audio_responses.js";
+import { ConvertParamsGoogle } from "../convert/convert_params.js";
+import { AudioSuccessGoogle } from "../convert/audio/audio_responses.js";
 
 ///Implements repository pattern to access Google resources
 export class RepositoryGoogle {
@@ -45,7 +45,9 @@ export class RepositoryGoogle {
   /// On failure returns one of the following:
   /// [AudioFailedBadRequestGoogle], [AudioFailedUnauthorizedGoogle], [AudioFailedUnsupportedGoogle], [AudioFailedTooManyRequestGoogle],
   /// [AudioFailedBadGatewayGoogle], [AudioFailedBadGatewayGoogle], [AudioFailedUnknownErrorGoogle] or [AzureExceptionGoogle]
-  async convertTts(ttsParams: TtsParamsGoogle): Promise<AudioSuccessGoogle> {
+  async convertTts(
+    ttsParams: ConvertParamsGoogle,
+  ): Promise<AudioSuccessGoogle> {
     return await this.audioHandler.getAudio(
       ttsParams,
       new ApiKeyAuthenticationHeaderGoogle(ConfigGoogle.apiKey),

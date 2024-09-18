@@ -1,14 +1,7 @@
 import { VoiceLocale } from '../../common/locale/locale_model.js';
+import { VoiceBase } from '../../common/voices/voices_base.js';
 
-export class VoiceUniversal {
-  provider: string;
-  engines: string[];
-  code: string;
-  name: string;
-  nativeName: string;
-  gender: string;
-  locale: VoiceLocale;
-
+export class VoiceUniversal extends VoiceBase {
   constructor({
     provider,
     engines,
@@ -26,12 +19,14 @@ export class VoiceUniversal {
     gender: string;
     locale: VoiceLocale;
   }) {
-    this.provider = provider;
-    this.engines = engines;
-    this.code = code;
-    this.name = name;
-    this.nativeName = nativeName;
-    this.gender = gender;
-    this.locale = locale;
+    super({
+      provider,
+      engines,
+      code,
+      name,
+      nativeName,
+      gender,
+      locale,
+    });
   }
 }

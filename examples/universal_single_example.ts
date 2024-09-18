@@ -1,10 +1,10 @@
 import {
-  TtsAudioOptionsUniversal,
+  ConvertAudioOptionsUniversal,
   TtsUniversal,
 } from '../src/universal/tts/tts.js';
 import { TtsProviders } from '../src/common/tts/tts_providers.js';
-import { TtsParamsUniversal } from '../src/universal/tts/tts_params.js';
-import { AudioOutputFormatUniversal } from '../src/universal/audio/audio_output_format.js';
+import { ConvertParamsUniversal } from '../src/universal/convert/convert_params.js';
+import { AudioOutputFormatUniversal } from '../src/universal/convert/audio/audio_output_format.js';
 
 async function main(): Promise<void> {
   try {
@@ -44,12 +44,12 @@ async function main(): Promise<void> {
       //Pick an English Voice
       const voice = voices.find((voice) => voice.locale.code.startsWith('en-'));
 
-      const ttsParams = new TtsParamsUniversal({
+      const ttsParams = new ConvertParamsUniversal({
         voice: voice,
         text: text,
         rate: 'slow',
         pitch: 'default',
-        audioOptions: new TtsAudioOptionsUniversal({
+        audioOptions: new ConvertAudioOptionsUniversal({
           audioFormat: AudioOutputFormatUniversal.mp3_32k,
         }),
       });

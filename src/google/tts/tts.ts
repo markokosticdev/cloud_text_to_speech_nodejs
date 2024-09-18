@@ -1,12 +1,12 @@
 // Assuming necessary imports are done above
-import { AudioHandlerGoogle } from "../audio/audio_handler.js";
+import { AudioHandlerGoogle } from "../convert/audio/audio_handler.js";
 import { VoicesHandlerGoogle } from "../voices/voices_handler.js";
 import { RepositoryGoogle } from "./tts_repository.js";
 import { InitParamsGoogle } from "../common/init.js";
 import { ConfigGoogle } from "../common/config.js";
 import { Log } from "../../common/utils/log.js";
-import { TtsParamsGoogle } from "./tts_params.js";
-import { AudioSuccessGoogle } from "../audio/audio_responses.js";
+import { ConvertParamsGoogle } from "../convert/convert_params.js";
+import { AudioSuccessGoogle } from "../convert/audio/audio_responses.js";
 import { VoicesSuccessGoogle } from "../voices/voices_responses.js";
 
 ///Helper class for Google TTS requests
@@ -69,7 +69,7 @@ export class TtsGoogle {
 
   ///
   public static async convertTts(
-    ttsParams: TtsParamsGoogle,
+    ttsParams: ConvertParamsGoogle,
   ): Promise<AudioSuccessGoogle> {
     return TtsGoogle.repo.convertTts(ttsParams);
   }
