@@ -9,7 +9,7 @@ export const AUDIO_STREAM_FORMAT =
   AudioOutputStreamFormatMicrosoft.audio16Khz32kBitrateMonoMp3;
 export const PROCESS_ASYNC = true;
 export const PROCESS_LIMIT = 4;
-export const ALLOWED_ELEMENTS = {
+export const SSML_ALLOWED_ELEMENTS = {
   audio: ['src'],
   bookmark: ['mark'],
   break: ['time', 'strength'],
@@ -27,3 +27,7 @@ export const ALLOWED_ELEMENTS = {
   'say-as': ['interpret-as', 'format', 'detail'],
   sub: ['alias'],
 };
+
+export const SSML_SPLIT_LIMIT = 10000;
+
+export const TEXT_SPLIT_LIMIT = 10000;

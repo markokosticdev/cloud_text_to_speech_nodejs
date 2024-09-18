@@ -3,14 +3,14 @@ import { TtsAudioOptionsGoogle } from './tts_audio_options.js';
 import { TtsProcessOptionsGoogle } from './tts_process_options.js';
 import { PITCH, RATE } from './tts_params_defaults.js';
 import { TtsSsmlOptionsGoogle } from './tts_ssml_options.js';
+import { BaseProxyMapper } from '../../common/http/base_proxy.js';
+import { TtsTextOptionsGoogle } from './tts_text_options.js';
 
 export class TtsParamsGoogle {
-  /// Rate is the speed at which the voice will speak.
-  ///
-  /// * `rate` default to default.
-
   voice: VoiceGoogle | undefined;
   voiceId: string | undefined;
+  ssml: string | undefined;
+  ssmlBatches: string[] | undefined;
   text: string | undefined;
   textBatches: string[] | undefined;
   rate: string;
@@ -18,10 +18,14 @@ export class TtsParamsGoogle {
   audioOptions: TtsAudioOptionsGoogle;
   processOptions: TtsProcessOptionsGoogle;
   ssmlOptions: TtsSsmlOptionsGoogle;
+  textOptions: TtsTextOptionsGoogle;
+  httpProxy: BaseProxyMapper;
 
   constructor({
     voice,
     voiceId,
+    ssml,
+    ssmlBatches,
     text,
     textBatches,
     rate,
@@ -29,9 +33,13 @@ export class TtsParamsGoogle {
     audioOptions,
     processOptions,
     ssmlOptions,
+    textOptions,
+    httpProxy,
   }: {
     voice?: VoiceGoogle;
     voiceId?: string;
+    ssml?: string;
+    ssmlBatches?: string[];
     text?: string;
     textBatches?: string[];
     rate?: string;
@@ -39,6 +47,8 @@ export class TtsParamsGoogle {
     audioOptions?: TtsAudioOptionsGoogle;
     processOptions?: TtsProcessOptionsGoogle;
     ssmlOptions?: TtsSsmlOptionsGoogle;
+    textOptions?: TtsTextOptionsGoogle;
+    httpProxy?: BaseProxyMapper;
   }) {
     if (!voice && !voiceId) {
       throw new Error('Either voice or voiceId must be provided.');
@@ -48,16 +58,22 @@ export class TtsParamsGoogle {
       throw new Error('Only voice or voiceId must be provided.');
     }
 
-    if (!text && !textBatches) {
-      throw new Error('Either text or textBatches must be provided.');
+    if (!ssml && !ssmlBatches && !text && !textBatches) {
+      throw new Error(
+        'Either input, ssmlBatches, text or textBatches must be provided.',
+      );
     }
 
-    if (text && textBatches) {
-      throw new Error('Only text or textBatches must be provided.');
+    if ([ssml, ssmlBatches, text, textBatches].filter(Boolean).length >= 2) {
+      throw new Error(
+        'Only input, ssmlBatches, text or textBatches must be provided.',
+      );
     }
 
     this.voice = voice;
     this.voiceId = voiceId;
+    this.ssml = ssml;
+    this.ssmlBatches = ssmlBatches;
     this.text = text;
     this.textBatches = textBatches;
     this.rate = rate ?? RATE;
@@ -65,5 +81,7 @@ export class TtsParamsGoogle {
     this.audioOptions = audioOptions ?? new TtsAudioOptionsGoogle();
     this.processOptions = processOptions ?? new TtsProcessOptionsGoogle();
     this.ssmlOptions = ssmlOptions ?? new TtsSsmlOptionsGoogle();
+    this.textOptions = textOptions ?? new TtsTextOptionsGoogle();
+    this.httpProxy = httpProxy;
   }
 }

@@ -22,7 +22,7 @@ export class VoiceMicrosoft extends VoiceUniversal {
     status,
     wordsPerMinute,
   }: {
-    provider?: string;
+    provider: string;
     engines: string[];
     code: string;
     name: string;

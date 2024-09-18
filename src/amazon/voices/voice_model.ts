@@ -13,7 +13,7 @@ export class VoiceAmazon extends VoiceUniversal {
     gender,
     locale,
   }: {
-    provider?: string;
+    provider: string;
     engines: string[];
     code: string;
     name: string;

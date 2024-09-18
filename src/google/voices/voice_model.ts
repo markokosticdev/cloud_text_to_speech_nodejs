@@ -16,7 +16,7 @@ export class VoiceGoogle extends VoiceUniversal {
     locale,
     sampleRateHertz,
   }: {
-    provider?: string;
+    provider: string;
     engines: string[];
     code: string;
     name: string;

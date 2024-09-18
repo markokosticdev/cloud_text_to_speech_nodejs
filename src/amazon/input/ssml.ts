@@ -1,6 +1,6 @@
 import { TtsSsmlOptionsAmazon } from '../tts/tts_ssml_options.js';
 import { SsmlBase } from '../../common/ssml/ssml_base.js';
-import { VoiceAmazon } from "../voices/voice_model.js";
+import { VoiceAmazon } from '../voices/voice_model.js';
 
 export class SsmlAmazon extends SsmlBase<VoiceAmazon, TtsSsmlOptionsAmazon> {
   protected get allowedElements(): { [p: string]: string[] } {

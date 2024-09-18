@@ -7,7 +7,7 @@ export const AUDIO_FORMAT = AudioOutputFormatAmazon.mp3;
 export const AUDIO_STREAM_FORMAT = AudioOutputStreamFormatAmazon.mp3;
 export const PROCESS_ASYNC = true;
 export const PROCESS_LIMIT = 4;
-export const ALLOWED_ELEMENTS = {
+export const SSML_ALLOWED_ELEMENTS = {
   'amazon:domain': ['name'],
   'amazon:effect': ['name', 'phonation', 'vocal-tract-length'],
   break: ['time', 'strength'],
@@ -21,3 +21,7 @@ export const ALLOWED_ELEMENTS = {
   sub: [],
   w: [],
 };
+
+export const SSML_SPLIT_LIMIT = 3000;
+
+export const TEXT_SPLIT_LIMIT = 3000;

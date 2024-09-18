@@ -7,18 +7,16 @@ import { TtsParamsAmazon } from '../../amazon/tts/tts_params.js';
 import { VoiceAmazon } from '../../amazon/voices/voice_model.js';
 import { TtsAudioOptionsMicrosoft } from '../../microsoft/tts/tts_audio_options.js';
 import { TtsProcessOptionsMicrosoft } from '../../microsoft/tts/tts_process_options.js';
-import { TtsSsmlOptionsMicrosoft } from '../../microsoft/tts/tts_ssml_options.js';
 import { TtsAudioOptionsGoogle } from '../../google/tts/tts_audio_options.js';
 import { TtsProcessOptionsGoogle } from '../../google/tts/tts_process_options.js';
-import { TtsSsmlOptionsGoogle } from '../../google/tts/tts_ssml_options.js';
 import { TtsAudioOptionsAmazon } from '../../amazon/tts/tts_audio_options.js';
 import { TtsProcessOptionsAmazon } from '../../amazon/tts/tts_process_options.js';
-import { TtsSsmlOptionsAmazon } from '../../amazon/tts/tts_ssml_options.js';
 
 export class TtsParamsMapper {
   static toGoogle(universalParams: TtsParamsUniversal): TtsParamsGoogle {
     return new TtsParamsGoogle({
       voice: new VoiceGoogle({
+        provider: universalParams.voice.provider,
         engines: universalParams.voice.engines,
         code: universalParams.voice.code,
         name: universalParams.voice.name,
@@ -26,7 +24,8 @@ export class TtsParamsMapper {
         gender: universalParams.voice.gender,
         locale: universalParams.voice.locale,
       }),
-      voiceId: universalParams.voiceId,
+      ssml: universalParams.ssml,
+      ssmlBatches: universalParams.ssmlBatches,
       text: universalParams.text,
       textBatches: universalParams.textBatches,
       rate: universalParams.rate,
@@ -44,16 +43,15 @@ export class TtsParamsMapper {
         processAsync: universalParams.processOptions.processAsync,
         processLimit: universalParams.processOptions.processLimit,
       }),
-      ssmlOptions: new TtsSsmlOptionsGoogle({
-        allowedElements:
-          universalParams.ssmlOptions.allowedElements.allowedElementsGoogle,
-      }),
+      ssmlOptions: universalParams.ssmlOptions.google,
+      textOptions: universalParams.textOptions.google,
     });
   }
 
   static toMicrosoft(universalParams: TtsParamsUniversal): TtsParamsMicrosoft {
     return new TtsParamsMicrosoft({
       voice: new VoiceMicrosoft({
+        provider: universalParams.voice.provider,
         engines: universalParams.voice.engines,
         code: universalParams.voice.code,
         name: universalParams.voice.name,
@@ -61,7 +59,8 @@ export class TtsParamsMapper {
         gender: universalParams.voice.gender,
         locale: universalParams.voice.locale,
       }),
-      voiceId: universalParams.voiceId,
+      ssml: universalParams.ssml,
+      ssmlBatches: universalParams.ssmlBatches,
       text: universalParams.text,
       textBatches: universalParams.textBatches,
       rate: universalParams.rate,
@@ -79,16 +78,15 @@ export class TtsParamsMapper {
         processAsync: universalParams.processOptions.processAsync,
         processLimit: universalParams.processOptions.processLimit,
       }),
-      ssmlOptions: new TtsSsmlOptionsMicrosoft({
-        allowedElements:
-          universalParams.ssmlOptions.allowedElements.allowedElementsMicrosoft,
-      }),
+      ssmlOptions: universalParams.ssmlOptions.microsoft,
+      textOptions: universalParams.textOptions.microsoft,
     });
   }
 
   static toAmazon(universalParams: TtsParamsUniversal): TtsParamsAmazon {
     return new TtsParamsAmazon({
       voice: new VoiceAmazon({
+        provider: universalParams.voice.provider,
         engines: universalParams.voice.engines,
         code: universalParams.voice.code,
         name: universalParams.voice.name,
@@ -96,7 +94,8 @@ export class TtsParamsMapper {
         gender: universalParams.voice.gender,
         locale: universalParams.voice.locale,
       }),
-      voiceId: universalParams.voiceId,
+      ssml: universalParams.ssml,
+      ssmlBatches: universalParams.ssmlBatches,
       text: universalParams.text,
       textBatches: universalParams.textBatches,
       rate: universalParams.rate,
@@ -114,10 +113,8 @@ export class TtsParamsMapper {
         processAsync: universalParams.processOptions.processAsync,
         processLimit: universalParams.processOptions.processLimit,
       }),
-      ssmlOptions: new TtsSsmlOptionsAmazon({
-        allowedElements:
-          universalParams.ssmlOptions.allowedElements.allowedElementsAmazon,
-      }),
+      ssmlOptions: universalParams.ssmlOptions.amazon,
+      textOptions: universalParams.textOptions.amazon,
     });
   }
 }

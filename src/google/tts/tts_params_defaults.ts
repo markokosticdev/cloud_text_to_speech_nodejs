@@ -7,7 +7,7 @@ export const AUDIO_FORMAT = AudioOutputFormatGoogle.mp3;
 export const AUDIO_STREAM_FORMAT = AudioOutputStreamFormatGoogle.mp3;
 export const PROCESS_ASYNC = true;
 export const PROCESS_LIMIT = 4;
-export const ALLOWED_ELEMENTS = {
+export const SSML_ALLOWED_ELEMENTS = {
   audio: [
     'src',
     'clipBegin',
@@ -39,3 +39,7 @@ export const ALLOWED_ELEMENTS = {
   seq: [],
   sub: ['alias'],
 };
+
+export const SSML_SPLIT_LIMIT = 5000;
+
+export const TEXT_SPLIT_LIMIT = 5000;

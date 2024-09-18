@@ -2,26 +2,33 @@ import { VoiceUniversal } from '../voices/voice_model.js';
 import { TtsAudioOptionsUniversal } from './tts_audio_options.js';
 import { TtsProcessOptionsUniversal } from './tts_process_options.js';
 import { PITCH, RATE } from './tts_params_defaults.js';
-import { TtsSsmlOptionsUniversal } from './tts_ssml_options.js';
+import { BaseProxyMapper } from '../../common/http/base_proxy.js';
+import { TtsOptionsUniversal } from "./tts_optionsl.js";
+import { TtsSsmlOptionsGoogle } from "../../google/tts/tts_ssml_options.js";
+import { TtsSsmlOptionsMicrosoft } from "../../microsoft/tts/tts_ssml_options.js";
+import { TtsSsmlOptionsAmazon } from "../../amazon/tts/tts_ssml_options.js";
+import { TtsTextOptionsGoogle } from "../../google/tts/tts_text_options.js";
+import { TtsTextOptionsMicrosoft } from "../../microsoft/tts/tts_text_options.js";
+import { TtsTextOptionsAmazon } from "../../amazon/tts/tts_text_options.js";
 
 export class TtsParamsUniversal {
-  /// Rate is the speed at which the voice will speak.
-  ///
-  /// * `rate` default to default.
-
-  voice: VoiceUniversal | undefined;
-  voiceId: string | undefined;
+  voice: VoiceUniversal;
+  ssml: string | undefined;
+  ssmlBatches: string[] | undefined;
   text: string | undefined;
   textBatches: string[] | undefined;
   rate: string;
   pitch: string;
   audioOptions: TtsAudioOptionsUniversal;
   processOptions: TtsProcessOptionsUniversal;
-  ssmlOptions: TtsSsmlOptionsUniversal;
+  ssmlOptions: TtsOptionsUniversal<TtsSsmlOptionsGoogle, TtsSsmlOptionsMicrosoft, TtsSsmlOptionsAmazon>;
+  textOptions: TtsOptionsUniversal<TtsTextOptionsGoogle, TtsTextOptionsMicrosoft, TtsTextOptionsAmazon>;
+  httpProxy: BaseProxyMapper;
 
   constructor({
     voice,
-    voiceId,
+    ssml,
+    ssmlBatches,
     text,
     textBatches,
     rate,
@@ -29,41 +36,53 @@ export class TtsParamsUniversal {
     audioOptions,
     processOptions,
     ssmlOptions,
+    textOptions,
+    httpProxy,
   }: {
-    voice?: VoiceUniversal;
-    voiceId?: string;
+    voice: VoiceUniversal;
+    ssml?: string;
+    ssmlBatches?: string[];
     text?: string;
     textBatches?: string[];
     rate?: string;
     pitch?: string;
     audioOptions?: TtsAudioOptionsUniversal;
     processOptions?: TtsProcessOptionsUniversal;
-    ssmlOptions?: TtsSsmlOptionsUniversal;
+    ssmlOptions?: TtsOptionsUniversal<TtsSsmlOptionsGoogle, TtsSsmlOptionsMicrosoft, TtsSsmlOptionsAmazon>;
+    textOptions?: TtsOptionsUniversal<TtsTextOptionsGoogle, TtsTextOptionsMicrosoft, TtsTextOptionsAmazon>;
+    httpProxy?: BaseProxyMapper;
   }) {
-    if (!voice && !voiceId) {
-      throw new Error('Either voice or voiceId must be provided.');
+    if (!ssml && !ssmlBatches && !text && !textBatches) {
+      throw new Error(
+        'Either input, ssmlBatches, text or textBatches must be provided.',
+      );
     }
 
-    if (voice && voiceId) {
-      throw new Error('Only voice or voiceId must be provided.');
-    }
-
-    if (!text && !textBatches) {
-      throw new Error('Either text or textBatches must be provided.');
-    }
-
-    if (text && textBatches) {
-      throw new Error('Only text or textBatches must be provided.');
+    if ([ssml, ssmlBatches, text, textBatches].filter(Boolean).length >= 2) {
+      throw new Error(
+        'Only input, ssmlBatches, text or textBatches must be provided.',
+      );
     }
 
     this.voice = voice;
-    this.voiceId = voiceId;
+    this.ssml = ssml;
+    this.ssmlBatches = ssmlBatches;
     this.text = text;
     this.textBatches = textBatches;
     this.rate = rate ?? RATE;
     this.pitch = pitch ?? PITCH;
     this.audioOptions = audioOptions ?? new TtsAudioOptionsUniversal();
     this.processOptions = processOptions ?? new TtsProcessOptionsUniversal();
-    this.ssmlOptions = ssmlOptions ?? new TtsSsmlOptionsUniversal();
+    this.ssmlOptions = ssmlOptions ?? new TtsOptionsUniversal({
+      google: new TtsSsmlOptionsGoogle(),
+      microsoft: new TtsSsmlOptionsMicrosoft(),
+      amazon: new TtsSsmlOptionsAmazon(),
+    });
+    this.textOptions = textOptions ?? new TtsOptionsUniversal({
+      google: new TtsTextOptionsGoogle(),
+      microsoft: new TtsTextOptionsMicrosoft(),
+      amazon: new TtsTextOptionsAmazon(),
+    });
+    this.httpProxy = httpProxy;
   }
 }

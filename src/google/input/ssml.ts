@@ -1,6 +1,6 @@
 import { TtsSsmlOptionsGoogle } from '../tts/tts_ssml_options.js';
 import { SsmlBase } from '../../common/ssml/ssml_base.js';
-import { VoiceGoogle } from "../voices/voice_model.js";
+import { VoiceGoogle } from '../voices/voice_model.js';
 
 export class SsmlGoogle extends SsmlBase<VoiceGoogle, TtsSsmlOptionsGoogle> {
   protected get allowedElements(): { [p: string]: string[] } {

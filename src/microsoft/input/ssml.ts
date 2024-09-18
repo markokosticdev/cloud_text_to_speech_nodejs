@@ -2,7 +2,10 @@ import { VoiceMicrosoft } from '../voices/voice_model.js';
 import { TtsSsmlOptionsMicrosoft } from '../tts/tts_ssml_options.js';
 import { SsmlBase } from '../../common/ssml/ssml_base.js';
 
-export class SsmlMicrosoft extends SsmlBase<VoiceMicrosoft, TtsSsmlOptionsMicrosoft> {
+export class SsmlMicrosoft extends SsmlBase<
+  VoiceMicrosoft,
+  TtsSsmlOptionsMicrosoft
+> {
   protected get allowedElements(): { [p: string]: string[] } {
     return this.options.allowedElements;
   }
