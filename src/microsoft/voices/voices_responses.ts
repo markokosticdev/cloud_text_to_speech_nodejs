@@ -1,5 +1,5 @@
 import { BaseResponse } from '../../common/http/base_response.js';
-import { VoiceMicrosoft } from './voice_model.js';
+import { VoiceMicrosoft } from './voices_model.js';
 
 export class VoicesResponseMicrosoft extends BaseResponse {
   protected constructor(code: number, reason: string) {

@@ -1,10 +1,11 @@
-import { VoicesHandlerGoogle } from "../voices/voices_handler.js";
-import { AudioHandlerGoogle } from "../convert/audio/audio_handler.js";
-import { VoicesSuccessGoogle } from "../voices/voices_responses.js";
-import { ApiKeyAuthenticationHeaderGoogle } from "../auth/authentication_types.js";
-import { ConfigGoogle } from "../common/config.js";
-import { ConvertParamsGoogle } from "../convert/convert_params.js";
-import { AudioSuccessGoogle } from "../convert/audio/audio_responses.js";
+import { VoicesHandlerGoogle } from '../voices/voices_handler.js';
+import { AudioHandlerGoogle } from '../convert/audio/audio_handler.js';
+import { VoicesSuccessGoogle } from '../voices/voices_responses.js';
+import { ApiKeyAuthenticationHeaderGoogle } from '../auth/authentication_types.js';
+import { ConfigGoogle } from '../common/config.js';
+import { ConvertParamsGoogle } from '../convert/convert_params.js';
+import { AudioSuccessGoogle } from '../convert/audio/audio_responses.js';
+import { VoicesParamsGoogle } from '../voices/voices_params.js';
 
 ///Implements repository pattern to access Google resources
 export class RepositoryGoogle {
@@ -28,8 +29,12 @@ export class RepositoryGoogle {
   /// On failure returns one of the following:
   /// [VoicesFailedBadRequestGoogle], [VoicesFailedBadRequestGoogle], [VoicesFailedUnauthorizedGoogle],
   /// [VoicesFailedTooManyRequestsGoogle], [VoicesFailedBadGateWayGoogle], [VoicesFailedUnknownErrorGoogle]
-  async getVoices(): Promise<VoicesSuccessGoogle> {
+  async getVoices(
+    voicesParams?: VoicesParamsGoogle,
+  ): Promise<VoicesSuccessGoogle> {
+    voicesParams = voicesParams ?? new VoicesParamsGoogle();
     return await this.voicesHandler.getVoices(
+      voicesParams,
       new ApiKeyAuthenticationHeaderGoogle(ConfigGoogle.apiKey),
     );
   }

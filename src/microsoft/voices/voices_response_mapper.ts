@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { BaseResponseMapper } from '../../common/http/base_response_mapper.js';
-import { VoiceMicrosoft } from './voice_model.js';
+import { VoiceMicrosoft } from './voices_model.js';
 import { Helpers } from '../../common/utils/helpers.js';
 import {
   VoicesFailedBadGateWayMicrosoft,
@@ -10,10 +10,16 @@ import {
   VoicesFailedUnknownErrorMicrosoft,
   VoicesSuccessMicrosoft,
 } from './voices_responses.js';
-import { VoiceNames } from '../../common/voices/voices_names.js';
 import { BaseResponse } from '../../common/http/base_response.js';
+import { VoicesParamsMicrosoft } from './voices_params.js';
 
 export class VoicesResponseMapperMicrosoft implements BaseResponseMapper {
+  params: VoicesParamsMicrosoft;
+
+  constructor(params: VoicesParamsMicrosoft) {
+    this.params = params;
+  }
+
   map(response: AxiosResponse): BaseResponse {
     switch (response.status) {
       case 200:
@@ -25,11 +31,7 @@ export class VoicesResponseMapperMicrosoft implements BaseResponseMapper {
 
         voices = Helpers.sortVoices(voices);
 
-        voices = Helpers.mapVoiceNames(
-          voices,
-          VoiceNames.male,
-          VoiceNames.female,
-        );
+        voices = Helpers.mapVoiceNames(voices, this.params.nameOptions);
 
         return new VoicesSuccessMicrosoft(voices);
       case 400:

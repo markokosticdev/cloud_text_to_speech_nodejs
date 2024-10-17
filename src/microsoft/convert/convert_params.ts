@@ -1,4 +1,4 @@
-import { VoiceMicrosoft } from '../voices/voice_model.js';
+import { VoiceMicrosoft } from '../voices/voices_model.js';
 import { ConvertAudioOptionsMicrosoft } from './convert_audio_options.js';
 import { ConvertProcessOptionsMicrosoft } from './convert_process_options.js';
 import { PITCH, RATE } from './convert_params_defaults.js';

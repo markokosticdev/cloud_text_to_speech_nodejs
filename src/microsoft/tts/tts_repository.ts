@@ -1,10 +1,11 @@
-import { VoicesHandlerMicrosoft } from "../voices/voices_handler.js";
-import { AudioHandlerMicrosoft } from "../convert/audio/audio_handler.js";
-import { VoicesSuccessMicrosoft } from "../voices/voices_responses.js";
-import { SubscriptionKeyAuthenticationHeaderMicrosoft } from "../auth/authentication_types.js";
-import { ConfigMicrosoft } from "../common/config.js";
-import { ConvertParamsMicrosoft } from "../convert/convert_params.js";
-import { AudioSuccessMicrosoft } from "../convert/audio/audio_responses.js";
+import { VoicesHandlerMicrosoft } from '../voices/voices_handler.js';
+import { AudioHandlerMicrosoft } from '../convert/audio/audio_handler.js';
+import { VoicesSuccessMicrosoft } from '../voices/voices_responses.js';
+import { SubscriptionKeyAuthenticationHeaderMicrosoft } from '../auth/authentication_types.js';
+import { ConfigMicrosoft } from '../common/config.js';
+import { ConvertParamsMicrosoft } from '../convert/convert_params.js';
+import { AudioSuccessMicrosoft } from '../convert/audio/audio_responses.js';
+import { VoicesParamsMicrosoft } from '../voices/voices_params.js';
 
 ///Implements repository pattern to access Microsoft resources
 export class RepositoryMicrosoft {
@@ -28,8 +29,12 @@ export class RepositoryMicrosoft {
   /// On failure returns one of the following:
   /// [VoicesFailedBadRequestMicrosoft], [VoicesFailedBadRequestMicrosoft], [VoicesFailedUnauthorizedMicrosoft],
   /// [VoicesFailedTooManyRequestsMicrosoft], [VoicesFailedBadGateWayMicrosoft], [VoicesFailedUnknownErrorMicrosoft]
-  async getVoices(): Promise<VoicesSuccessMicrosoft> {
+  async getVoices(
+    voicesParams?: VoicesParamsMicrosoft,
+  ): Promise<VoicesSuccessMicrosoft> {
+    voicesParams = voicesParams ?? new VoicesParamsMicrosoft();
     return await this.voicesHandler.getVoices(
+      voicesParams,
       new SubscriptionKeyAuthenticationHeaderMicrosoft(
         ConfigMicrosoft.subscriptionKey,
       ),

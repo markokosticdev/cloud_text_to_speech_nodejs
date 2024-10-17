@@ -37,7 +37,7 @@ async function main(): Promise<void> {
     const ttsResponse = await TtsAmazon.convertTts(ttsParams);
 
     // Get the audio bytes.
-    const audioBytes = ttsResponse.audio; // Assuming audio is a Buffer or Uint8Array
+    const audioBytes = ttsResponse.audio;
 
     console.log(
       `Audio size: ${(audioBytes.byteLength / (1024 * 1024)).toFixed(2)} Mb`,

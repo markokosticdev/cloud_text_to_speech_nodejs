@@ -11,9 +11,8 @@ import { AudioSuccessUniversal } from '../convert/audio/audio_responses.js';
 import { ConvertParamsMapper } from '../convert/convert_params_mapper.js';
 import { Log } from '../../common/utils/log.js';
 import { Helpers } from '../../common/utils/helpers.js';
-
-export * from '../convert/convert_audio_options.js';
-export * from '../convert/convert_process_options.js';
+import { VoicesParamsUniversal } from '../voices/voices_params.js';
+import { VoicesParamsMapper } from '../voices/voices_params_mapper.js';
 
 export class TtsUniversal {
   private static _provider: string;
@@ -23,27 +22,21 @@ export class TtsUniversal {
     return TtsUniversal._initDone;
   }
 
-  /// MUST be called first before any other call is made.
-
   static setProvider(provider: string): void {
     TtsUniversal._provider = provider.toLowerCase();
   }
 
-  ///Get voices
+  /// MUST be called first before any other call is made.
   ///
-  ///Returns [VoicesSuccessUniversal]
+  /// **provider** : TTS Provider
   ///
-  /// [VoicesSuccessUniversal] request succeeded
+  /// **googleParams** : Google Init Params
   ///
-  /// On failure throws one of the following:
-  /// [VoicesFailedBadRequestGoogle], [VoicesFailedBadRequestGoogle], [VoicesFailedUnauthorizedGoogle],
-  /// [VoicesFailedTooManyRequestsGoogle], [VoicesFailedBadGateWayGoogle], [VoicesFailedUnknownErrorGoogle],
-  /// [VoicesFailedBadRequestMicrosoft], [VoicesFailedBadRequestMicrosoft], [VoicesFailedUnauthorizedMicrosoft],
-  /// [VoicesFailedTooManyRequestsMicrosoft], [VoicesFailedBadGateWayMicrosoft], [VoicesFailedUnknownErrorMicrosoft],
-  /// [VoicesFailedBadRequestAmazon], [VoicesFailedBadRequestAmazon], [VoicesFailedUnauthorizedAmazon],
-  /// [VoicesFailedTooManyRequestsAmazon], [VoicesFailedBadGateWayAmazon], [VoicesFailedUnknownErrorAmazon]
-
+  /// **microsoftParams** : Microsoft Init Params
   ///
+  /// **amazonParams** : Amazon Init Params
+  ///
+  /// **withLogs** : (optional) enable logs. *true* by default
   static init({
     provider,
     googleParams,
@@ -66,12 +59,28 @@ export class TtsUniversal {
     );
   }
 
+  ///Get voices
   ///
-  static async getVoices(): Promise<VoicesSuccessUniversal> {
+  /// [voicesParams] request parameters
+  ///
+  ///Returns [VoicesSuccessUniversal]
+  ///
+  /// [VoicesSuccessUniversal] request succeeded
+  ///
+  /// On failure throws one of the following:
+  /// [VoicesFailedBadRequestGoogle], [VoicesFailedBadRequestGoogle], [VoicesFailedUnauthorizedGoogle],
+  /// [VoicesFailedTooManyRequestsGoogle], [VoicesFailedBadGateWayGoogle], [VoicesFailedUnknownErrorGoogle],
+  /// [VoicesFailedBadRequestMicrosoft], [VoicesFailedBadRequestMicrosoft], [VoicesFailedUnauthorizedMicrosoft],
+  /// [VoicesFailedTooManyRequestsMicrosoft], [VoicesFailedBadGateWayMicrosoft], [VoicesFailedUnknownErrorMicrosoft],
+  /// [VoicesFailedBadRequestAmazon], [VoicesFailedBadRequestAmazon], [VoicesFailedUnauthorizedAmazon],
+  /// [VoicesFailedTooManyRequestsAmazon], [VoicesFailedBadGateWayAmazon], [VoicesFailedUnknownErrorAmazon]
+  static async getVoices(
+    voicesParams?: VoicesParamsUniversal,
+  ): Promise<VoicesSuccessUniversal> {
     return this.handleProvider<Promise<VoicesSuccessUniversal>>({
-      google: () => this._getVoices(TtsProviders.google),
-      microsoft: () => this._getVoices(TtsProviders.microsoft),
-      amazon: () => this._getVoices(TtsProviders.amazon),
+      google: () => this._getVoices(TtsProviders.google, voicesParams),
+      microsoft: () => this._getVoices(TtsProviders.microsoft, voicesParams),
+      amazon: () => this._getVoices(TtsProviders.amazon, voicesParams),
       combine: async () => {
         const providers = [
           TtsProviders.google,
@@ -84,7 +93,7 @@ export class TtsUniversal {
         );
 
         const allVoicesPromises = activeProviders.map((provider) =>
-          this._getVoices(provider),
+          this._getVoices(provider, voicesParams),
         );
 
         const allVoices = await Promise.all(allVoicesPromises);
@@ -120,40 +129,42 @@ export class TtsUniversal {
   /// [AudioFailedBadGatewayMicrosoft], [AudioFailedBadGatewayMicrosoft], [AudioFailedUnknownErrorMicrosoft],
   /// [AudioFailedBadRequestAmazon], [AudioFailedUnauthorizedAmazon], [AudioFailedUnsupportedAmazon], [AudioFailedTooManyRequestAmazon],
   /// [AudioFailedBadGatewayAmazon], [AudioFailedBadGatewayAmazon], [AudioFailedUnknownErrorAmazon]
-
-  ///
   static async convertTts(
-    params: ConvertParamsUniversal,
+    ttsParams: ConvertParamsUniversal,
   ): Promise<AudioSuccessUniversal> {
     return TtsUniversal.handleProvider<Promise<AudioSuccessUniversal>>({
       google: async () => {
         const audio = await TtsGoogle.convertTts(
-          ConvertParamsMapper.toGoogle(params),
+          ConvertParamsMapper.toGoogle(ttsParams),
         );
         return new AudioSuccessUniversal(audio.audio, audio.code, audio.reason);
       },
       microsoft: async () => {
         const audio = await TtsMicrosoft.convertTts(
-          ConvertParamsMapper.toMicrosoft(params),
+          ConvertParamsMapper.toMicrosoft(ttsParams),
         );
         return new AudioSuccessUniversal(audio.audio, audio.code, audio.reason);
       },
       amazon: async () => {
         const audio = await TtsAmazon.convertTts(
-          ConvertParamsMapper.toAmazon(params),
+          ConvertParamsMapper.toAmazon(ttsParams),
         );
         return new AudioSuccessUniversal(audio.audio, audio.code, audio.reason);
       },
-      provider: params.voice.provider,
+      provider: ttsParams.voice.provider,
     });
   }
 
   private static async _getVoices(
     provider: string,
+    voicesParams?: VoicesParamsUniversal,
   ): Promise<VoicesSuccessUniversal> {
     return this.handleProvider<Promise<VoicesSuccessUniversal>>({
       google: async () => {
-        const voices = await TtsGoogle.getVoices();
+        const voicesParamsGoogle = voicesParams
+          ? VoicesParamsMapper.toGoogle(voicesParams)
+          : undefined;
+        const voices = await TtsGoogle.getVoices(voicesParamsGoogle);
         return new VoicesSuccessUniversal(
           voices.voices,
           voices.code,
@@ -161,7 +172,10 @@ export class TtsUniversal {
         );
       },
       microsoft: async () => {
-        const voices = await TtsMicrosoft.getVoices();
+        const voicesParamsMicrosoft = voicesParams
+          ? VoicesParamsMapper.toMicrosoft(voicesParams)
+          : undefined;
+        const voices = await TtsMicrosoft.getVoices(voicesParamsMicrosoft);
         return new VoicesSuccessUniversal(
           voices.voices,
           voices.code,
@@ -169,7 +183,10 @@ export class TtsUniversal {
         );
       },
       amazon: async () => {
-        const voices = await TtsAmazon.getVoices();
+        const voicesParamsAmazon = voicesParams
+          ? VoicesParamsMapper.toAmazon(voicesParams)
+          : undefined;
+        const voices = await TtsAmazon.getVoices(voicesParamsAmazon);
         return new VoicesSuccessUniversal(
           voices.voices,
           voices.code,

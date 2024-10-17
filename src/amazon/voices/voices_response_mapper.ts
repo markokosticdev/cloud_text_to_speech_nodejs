@@ -10,10 +10,16 @@ import {
   VoicesFailedUnknownErrorAmazon,
   VoicesSuccessAmazon,
 } from './voices_responses.js';
-import { VoiceNames } from '../../common/voices/voices_names.js';
 import { BaseResponse } from '../../common/http/base_response.js';
+import { VoicesParamsAmazon } from './voices_params.js';
 
 export class VoicesResponseMapperAmazon implements BaseResponseMapper {
+  params: VoicesParamsAmazon;
+
+  constructor(params: VoicesParamsAmazon) {
+    this.params = params;
+  }
+
   map(response: AxiosResponse): BaseResponse {
     switch (response.status) {
       case 200:
@@ -25,11 +31,7 @@ export class VoicesResponseMapperAmazon implements BaseResponseMapper {
 
         voices = Helpers.sortVoices(voices);
 
-        voices = Helpers.mapVoiceNames(
-          voices,
-          VoiceNames.male,
-          VoiceNames.female,
-        );
+        voices = Helpers.mapVoiceNames(voices, this.params.nameOptions);
 
         return new VoicesSuccessAmazon(voices);
       case 400:

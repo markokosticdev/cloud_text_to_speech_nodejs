@@ -10,10 +10,16 @@ import {
   VoicesFailedUnknownErrorGoogle,
   VoicesSuccessGoogle,
 } from './voices_responses.js';
-import { VoiceNames } from '../../common/voices/voices_names.js';
 import { BaseResponse } from '../../common/http/base_response.js';
+import { VoicesParamsGoogle } from './voices_params.js';
 
 export class VoicesResponseMapperGoogle implements BaseResponseMapper {
+  params: VoicesParamsGoogle;
+
+  constructor(params: VoicesParamsGoogle) {
+    this.params = params;
+  }
+
   map(response: AxiosResponse): BaseResponse {
     switch (response.status) {
       case 200:
@@ -25,11 +31,7 @@ export class VoicesResponseMapperGoogle implements BaseResponseMapper {
 
         voices = Helpers.sortVoices(voices);
 
-        voices = Helpers.mapVoiceNames(
-          voices,
-          VoiceNames.male,
-          VoiceNames.female,
-        );
+        voices = Helpers.mapVoiceNames(voices, this.params.nameOptions);
 
         return new VoicesSuccessGoogle(voices);
       case 400:

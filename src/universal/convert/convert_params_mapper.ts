@@ -2,7 +2,7 @@ import { ConvertParamsUniversal } from './convert_params.js';
 import { ConvertParamsGoogle } from '../../google/convert/convert_params.js';
 import { VoiceGoogle } from '../../google/voices/voices_model.js';
 import { ConvertParamsMicrosoft } from '../../microsoft/convert/convert_params.js';
-import { VoiceMicrosoft } from '../../microsoft/voices/voice_model.js';
+import { VoiceMicrosoft } from '../../microsoft/voices/voices_model.js';
 import { ConvertParamsAmazon } from '../../amazon/convert/convert_params.js';
 import { VoiceAmazon } from '../../amazon/voices/voices_model.js';
 import { ConvertAudioOptionsMicrosoft } from '../../microsoft/convert/convert_audio_options.js';
@@ -47,6 +47,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.google,
       textOptions: universalParams.textOptions.google,
+      httpProxy: universalParams.httpProxy,
     });
   }
 
@@ -84,6 +85,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.microsoft,
       textOptions: universalParams.textOptions.microsoft,
+      httpProxy: universalParams.httpProxy,
     });
   }
 
@@ -121,6 +123,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.amazon,
       textOptions: universalParams.textOptions.amazon,
+      httpProxy: universalParams.httpProxy,
     });
   }
 }

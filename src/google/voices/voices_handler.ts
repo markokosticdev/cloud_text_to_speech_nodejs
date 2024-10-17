@@ -4,9 +4,11 @@ import { VoicesClientGoogle } from './voices_client.js';
 import { VoicesResponseMapperGoogle } from './voices_response_mapper.js';
 import { EndpointsGoogle } from '../common/constants.js';
 import { AuthenticationHeaderGoogle } from '../auth/authentication_types.js';
+import { VoicesParamsGoogle } from './voices_params.js';
 
 export class VoicesHandlerGoogle {
   public async getVoices(
+    params: VoicesParamsGoogle,
     authHeader: AuthenticationHeaderGoogle,
   ): Promise<VoicesSuccessGoogle> {
     const client: AxiosInstance = axios.create();
@@ -14,12 +16,15 @@ export class VoicesHandlerGoogle {
       client,
       authHeader,
     );
+    const mapper = new VoicesResponseMapperGoogle(params);
 
     try {
-      const mapper = new VoicesResponseMapperGoogle();
+      const httpProxy = params.httpProxy?.();
 
       const response = await voicesClient.send({
-        url: EndpointsGoogle.voices,
+        url: httpProxy?.url ?? EndpointsGoogle.voices,
+        ...(httpProxy?.headers && { headers: httpProxy.headers }),
+        ...(httpProxy?.params && { params: httpProxy.params }),
         method: 'GET',
       });
 

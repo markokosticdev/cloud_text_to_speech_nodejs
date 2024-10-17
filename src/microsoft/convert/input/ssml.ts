@@ -1,6 +1,6 @@
 import { ConvertSsmlOptionsMicrosoft } from '../convert_ssml_options.js';
 import { SsmlBase } from '../../../common/convert/input/ssml/ssml_base.js';
-import { VoiceMicrosoft } from '../../voices/voice_model.js';
+import { VoiceMicrosoft } from '../../voices/voices_model.js';
 
 export class SsmlMicrosoft extends SsmlBase<
   VoiceMicrosoft,

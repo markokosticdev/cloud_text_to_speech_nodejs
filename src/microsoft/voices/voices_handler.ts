@@ -4,9 +4,11 @@ import { VoicesClientMicrosoft } from './voices_client.js';
 import { VoicesResponseMapperMicrosoft } from './voices_response_mapper.js';
 import { EndpointsMicrosoft } from '../common/constants.js';
 import { AuthenticationHeaderMicrosoft } from '../auth/authentication_types.js';
+import { VoicesParamsMicrosoft } from './voices_params.js';
 
 export class VoicesHandlerMicrosoft {
   public async getVoices(
+    params: VoicesParamsMicrosoft,
     authHeader: AuthenticationHeaderMicrosoft,
   ): Promise<VoicesSuccessMicrosoft> {
     const client: AxiosInstance = axios.create();
@@ -14,12 +16,15 @@ export class VoicesHandlerMicrosoft {
       client,
       authHeader,
     );
+    const mapper = new VoicesResponseMapperMicrosoft(params);
 
     try {
-      const mapper = new VoicesResponseMapperMicrosoft();
+      const httpProxy = params.httpProxy?.();
 
       const response = await voicesClient.send({
-        url: EndpointsMicrosoft.voices,
+        url: httpProxy?.url ?? EndpointsMicrosoft.voices,
+        ...(httpProxy?.headers && { headers: httpProxy.headers }),
+        ...(httpProxy?.params && { params: httpProxy.params }),
         method: 'GET',
       });
 

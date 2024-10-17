@@ -1,4 +1,4 @@
-import { BaseHeader } from "../../common/http/base_header.js";
+import { BaseHeader } from '../../common/http/base_header.js';
 
 ///Base class that all authentications types must implement.
 export abstract class AuthenticationHeaderGoogle extends BaseHeader {

@@ -50,7 +50,7 @@ async function main(): Promise<void> {
     const ttsResponse = await TtsUniversal.convertTts(ttsParams);
 
     // Get the audio bytes.
-    const audioBytes = ttsResponse.audio; // you can save to a file for playback
+    const audioBytes = ttsResponse.audio;
 
     console.log(
       `Audio size: ${(audioBytes.byteLength / (1024 * 1024)).toFixed(2)} Mb`,

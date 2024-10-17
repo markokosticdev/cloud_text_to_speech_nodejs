@@ -1,13 +1,14 @@
 // Assuming necessary imports are done above
-import { AudioHandlerAmazon } from "../convert/audio/audio_handler.js";
-import { VoicesHandlerAmazon } from "../voices/voices_handler.js";
-import { RepositoryAmazon } from "./tts_repository.js";
-import { InitParamsAmazon } from "../common/init.js";
-import { ConfigAmazon } from "../common/config.js";
-import { Log } from "../../common/utils/log.js";
-import { ConvertParamsAmazon } from "../convert/convert_params.js";
-import { AudioSuccessAmazon } from "../convert/audio/audio_responses.js";
-import { VoicesSuccessAmazon } from "../voices/voices_responses.js";
+import { AudioHandlerAmazon } from '../convert/audio/audio_handler.js';
+import { VoicesHandlerAmazon } from '../voices/voices_handler.js';
+import { RepositoryAmazon } from './tts_repository.js';
+import { InitParamsAmazon } from '../common/init.js';
+import { ConfigAmazon } from '../common/config.js';
+import { Log } from '../../common/utils/log.js';
+import { ConvertParamsAmazon } from '../convert/convert_params.js';
+import { AudioSuccessAmazon } from '../convert/audio/audio_responses.js';
+import { VoicesSuccessAmazon } from '../voices/voices_responses.js';
+import { VoicesParamsAmazon } from '../voices/voices_params.js';
 
 ///Helper class for Amazon TTS requests
 export class TtsAmazon {
@@ -19,27 +20,15 @@ export class TtsAmazon {
 
   private static _initDone: boolean = false;
 
+  public static get initDone(): boolean {
+    return TtsAmazon._initDone;
+  }
+
   /// MUST be called first before any other call is made.
   ///
   /// **params** : Amazon Init Params
   ///
   /// **withLogs** : (optional) enable logs. *true* by default
-
-  public static get initDone(): boolean {
-    return TtsAmazon._initDone;
-  }
-
-  ///Get voices
-  ///
-  ///Returns [VoicesSuccessAmazon]
-  ///
-  /// [VoicesSuccessAmazon] request succeeded
-  ///
-  /// On failure throws one of the following:
-  /// [VoicesFailedBadRequestAmazon], [VoicesFailedBadRequestAmazon], [VoicesFailedUnauthorizedAmazon],
-  /// [VoicesFailedTooManyRequestsAmazon], [VoicesFailedBadGateWayAmazon], [VoicesFailedUnknownErrorAmazon]
-
-  ///
   public static init({
     params,
     withLogs = true,
@@ -48,6 +37,23 @@ export class TtsAmazon {
     withLogs: boolean;
   }): void {
     this._init(params.keyId, params.accessKey, params.region, withLogs);
+  }
+
+  ///Get voices
+  ///
+  /// [voicesParams] request parameters
+  ///
+  ///Returns [VoicesSuccessAmazon]
+  ///
+  /// [VoicesSuccessAmazon] request succeeded
+  ///
+  /// On failure throws one of the following:
+  /// [VoicesFailedBadRequestAmazon], [VoicesFailedBadRequestAmazon], [VoicesFailedUnauthorizedAmazon],
+  /// [VoicesFailedTooManyRequestsAmazon], [VoicesFailedBadGateWayAmazon], [VoicesFailedUnknownErrorAmazon]
+  public static async getVoices(
+    voicesParams?: VoicesParamsAmazon,
+  ): Promise<VoicesSuccessAmazon> {
+    return TtsAmazon.repo.getVoices(voicesParams);
   }
 
   ///Converts text to speech and return audio file as [Uint8Array].
@@ -61,13 +67,6 @@ export class TtsAmazon {
   /// On failure returns one of the following:
   /// [AudioFailedBadRequestAmazon], [AudioFailedUnauthorizedAmazon], [AudioFailedUnsupportedAmazon], [AudioFailedTooManyRequestAmazon],
   /// [AudioFailedBadGatewayAmazon], [AudioFailedBadGatewayAmazon], [AudioFailedUnknownErrorAmazon]
-
-  ///
-  public static async getVoices(): Promise<VoicesSuccessAmazon> {
-    return TtsAmazon.repo.getVoices();
-  }
-
-  ///
   public static async convertTts(
     ttsParams: ConvertParamsAmazon,
   ): Promise<AudioSuccessAmazon> {
