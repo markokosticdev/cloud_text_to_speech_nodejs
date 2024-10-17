@@ -41,9 +41,9 @@ Thank you for contributing to the development and improvement of Cloud Text-To-S
 There are essentially two ways to use Cloud Text-To-Speech:
 
 - **Universal**: Using TtsUniversal to be able to configure the TTS provider dynamically and us it.
-    - **Single**: Using `TtsProviders.google`, `TtsProviders.microsoft`, `TtsProviders.amazon` to use the single
-      provider at a time.
-    - **Combine**: Using `TtsProviders.combine` to combine all providers and get all voices at once.
+  - **Single**: Using `TtsProviders.google`, `TtsProviders.microsoft`, `TtsProviders.amazon` to use the single
+    provider at a time.
+  - **Combine**: Using `TtsProviders.combine` to combine all providers and get all voices at once.
 - **Provider**: Using TtsGoogle, TtsMicrosoft, TtsAmazon to get the most from provider's API.
 
 ### Universal(Single)
@@ -54,10 +54,14 @@ To init configuration use:
 //Do init once and run it before any other method
 TtsUniversal.init({
   provider: TtsProviders.amazon,
-  googleParams: { apiKey: "API-KEY" },
-  microsoftParams: { subscriptionKey: "SUBSCRIPTION-KEY", region: "eastus" },
-  amazonParams: { keyId: "KEY-ID", accessKey: "ACCESS-KEY", region: "us-east-1" },
-  withLogs: true
+  googleParams: { apiKey: 'API-KEY' },
+  microsoftParams: { subscriptionKey: 'SUBSCRIPTION-KEY', region: 'eastus' },
+  amazonParams: {
+    keyId: 'KEY-ID',
+    accessKey: 'ACCESS-KEY',
+    region: 'us-east-1',
+  },
+  withLogs: true,
 });
 ```
 
@@ -85,7 +89,7 @@ To convert TTS and get audio use:
 
 ```ts
 //Generate Audio for a text
-const text = "Amazon, Microsoft and Google Text-to-Speech API are awesome";
+const text = 'Amazon, Microsoft and Google Text-to-Speech API are awesome';
 
 const ttsParams = new ConvertParamsUniversal({
   voice: voice,
@@ -109,10 +113,14 @@ To init configuration use:
 //Do init once and run it before any other method
 TtsUniversal.init({
   provider: TtsProviders.combine,
-  googleParams: { apiKey: "API-KEY" },
-  microsoftParams: { subscriptionKey: "SUBSCRIPTION-KEY", region: "eastus" },
-  amazonParams: { keyId: "KEY-ID", accessKey: "ACCESS-KEY", region: "us-east-1" },
-  withLogs: true
+  googleParams: { apiKey: 'API-KEY' },
+  microsoftParams: { subscriptionKey: 'SUBSCRIPTION-KEY', region: 'eastus' },
+  amazonParams: {
+    keyId: 'KEY-ID',
+    accessKey: 'ACCESS-KEY',
+    region: 'us-east-1',
+  },
+  withLogs: true,
 });
 ```
 
@@ -140,7 +148,7 @@ To convert TTS and get audio use:
 
 ```ts
 //Generate Audio for a text
-const text = "Amazon, Microsoft and Google Text-to-Speech API are awesome";
+const text = 'Amazon, Microsoft and Google Text-to-Speech API are awesome';
 
 const ttsParams = new ConvertParamsUniversal({
   voice: voice,
@@ -186,7 +194,8 @@ To convert TTS and get audio use:
 
 ```ts
 //Generate Audio for a text
-const text = '<speak>Google<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
+const text =
+  '<speak>Google<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
 
 const ttsParams = new ConvertParamsGoogle({
   voice: voice,
@@ -232,7 +241,8 @@ To convert TTS and get audio use:
 
 ```ts
 //Generate Audio for a text
-const text = '<speak>Microsoft<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
+const text =
+  '<speak>Microsoft<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
 
 const ttsParams = new ConvertParamsMicrosoft({
   voice: voice,
@@ -278,7 +288,8 @@ To convert TTS and get audio use:
 
 ```ts
 //Generate Audio for a text
-const text = '<speak>Amazon<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
+const text =
+  '<speak>Amazon<break time="2s"> Speech Service Text-to-Speech API is awesome!</speak>';
 
 const ttsParams = new ConvertParamsAmazon({
   voice: voice,

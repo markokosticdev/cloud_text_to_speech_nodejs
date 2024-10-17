@@ -1,10 +1,8 @@
-import {
-  ConvertAudioOptionsUniversal,
-  TtsUniversal,
-} from '../src/universal/tts/tts.js';
+import { TtsUniversal } from '../src/universal/tts/tts.js';
 import { TtsProviders } from '../src/common/tts/tts_providers.js';
 import { ConvertParamsUniversal } from '../src/universal/convert/convert_params.js';
 import { AudioOutputFormatUniversal } from '../src/universal/convert/audio/audio_output_format.js';
+import { ConvertAudioOptionsUniversal } from '../src/universal/convert/convert_audio_options.js';
 
 async function main(): Promise<void> {
   try {
