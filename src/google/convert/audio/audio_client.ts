@@ -1,9 +1,9 @@
-import { BaseClient } from '../../../common/http/base_client.js';
+import { HttpClientBase } from '../../../common/http/http_client_base.js';
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { AuthenticationHeaderGoogle } from '../../auth/authentication_types.js';
 import axiosRetry, { IAxiosRetryConfig } from 'axios-retry';
 
-export class AudioClientGoogle extends BaseClient {
+export class AudioClientGoogle extends HttpClientBase {
   constructor(client: AxiosInstance, header: AuthenticationHeaderGoogle) {
     const retryConfig: IAxiosRetryConfig = {
       retries: 3,

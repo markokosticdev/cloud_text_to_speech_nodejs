@@ -6,7 +6,7 @@ import { SsmlMicrosoft } from '../input/ssml.js';
 import { EndpointsMicrosoft } from '../../common/constants.js';
 import { VoicesClientMicrosoft } from '../../voices/voices_client.js';
 import { AudioClientMicrosoft } from './audio_client.js';
-import { BaseResponse } from '../../../common/http/base_response.js';
+import { HttpResponseBase } from '../../../common/http/http_response_base.js';
 import { AudioTypeHeaderMicrosoft } from './audio_type_header.js';
 import { ConvertParamsMicrosoft } from '../convert_params.js';
 import { AudioHandler } from '../../../common/convert/audio/audio_handler.js';
@@ -29,7 +29,7 @@ export class AudioHandlerMicrosoft {
 
     let audioSuccesses: AudioSuccessMicrosoft[];
 
-    if (params.ssml || params.ssmlBatches) {
+    if (params.ssml || params.ssmlChunks) {
       audioSuccesses = await this.processFromSsml(params, audioClient, mapper);
     } else {
       audioSuccesses = await this.processFromText(params, audioClient, mapper);
@@ -47,7 +47,7 @@ export class AudioHandlerMicrosoft {
   ): Promise<AudioSuccessMicrosoft[]> {
     const ssml = new SsmlMicrosoft({
       ssml: params.ssml,
-      ssmlBatches: params.ssmlBatches,
+      ssmlChunks: params.ssmlChunks,
       rate: params.rate,
       pitch: params.pitch,
       voice: params.voice,
@@ -57,7 +57,7 @@ export class AudioHandlerMicrosoft {
 
     if (params.processOptions.processAsync) {
       return await AudioHandler.handleAsync<AudioSuccessMicrosoft>(
-        ssml.processedSsmlBatches(),
+        ssml.processedSsmlChunks(),
         async (batch) => {
           return await this.processItemFromSsml(
             params,
@@ -70,7 +70,7 @@ export class AudioHandlerMicrosoft {
       );
     } else {
       return await AudioHandler.handleSync<AudioSuccessMicrosoft>(
-        ssml.processedSsmlBatches(),
+        ssml.processedSsmlChunks(),
         async (batch) => {
           return await this.processItemFromSsml(
             params,
@@ -101,7 +101,7 @@ export class AudioHandlerMicrosoft {
         responseType: 'arraybuffer',
       });
 
-      const audioResponse: BaseResponse = mapper.map(response);
+      const audioResponse: HttpResponseBase = mapper.map(response);
 
       if (audioResponse instanceof AudioSuccessMicrosoft) {
         return audioResponse;
@@ -120,7 +120,7 @@ export class AudioHandlerMicrosoft {
   ): Promise<AudioSuccessMicrosoft[]> {
     const text = new TextMicrosoft({
       text: params.text,
-      textBatches: params.textBatches,
+      textChunks: params.textChunks,
       rate: params.rate,
       pitch: params.pitch,
       voice: params.voice,
@@ -130,7 +130,7 @@ export class AudioHandlerMicrosoft {
 
     if (params.processOptions.processAsync) {
       return await AudioHandler.handleAsync<AudioSuccessMicrosoft>(
-        text.processedTextBatches(),
+        text.processedTextChunks(),
         async (batch) => {
           return await this.processItemFromText(
             params,
@@ -143,7 +143,7 @@ export class AudioHandlerMicrosoft {
       );
     } else {
       return await AudioHandler.handleSync<AudioSuccessMicrosoft>(
-        text.processedTextBatches(),
+        text.processedTextChunks(),
         async (batch) => {
           return await this.processItemFromText(
             params,
@@ -174,7 +174,7 @@ export class AudioHandlerMicrosoft {
         responseType: 'arraybuffer',
       });
 
-      const audioResponse: BaseResponse = mapper.map(response);
+      const audioResponse: HttpResponseBase = mapper.map(response);
 
       if (audioResponse instanceof AudioSuccessMicrosoft) {
         return audioResponse;

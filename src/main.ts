@@ -1,6 +1,6 @@
 export * from './common/tts/tts_providers.js';
 export * from './common/locale/locale_model.js';
-export * from './common/http/base_proxy.js';
+export * from './common/http/http_proxy_base.js';
 
 export * from './google/common/common.js';
 export * from './google/voices/voices.js';

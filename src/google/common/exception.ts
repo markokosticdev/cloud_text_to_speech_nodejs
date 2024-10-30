@@ -1,9 +1,9 @@
-import { BaseResponse } from '../../common/http/base_response.js';
+import { HttpResponseBase } from '../../common/http/http_response_base.js';
 
 export class ExceptionGoogle extends Error {
-  response: BaseResponse;
+  response: HttpResponseBase;
 
-  constructor(response: BaseResponse) {
+  constructor(response: HttpResponseBase) {
     super(`[TtsExceptionGoogle] ${response.code}: ${response.reason}`);
     this.response = response;
     this.name = 'TtsExceptionGoogle';

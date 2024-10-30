@@ -1,11 +1,11 @@
 export class TextMinimizer {
   private constructor() {}
 
-  static minimize(ssml: string): string {
-    let minimizedSsml = ssml.replace(/[\t\n]+/g, ' ');
+  static minimize(text: string): string {
+    let minimizedText = text.replace(/[\t\n]+/g, ' ');
 
-    minimizedSsml = minimizedSsml.replace(/\s{2,}/g, ' ');
+    minimizedText = minimizedText.replace(/\s{2,}/g, ' ');
 
-    return minimizedSsml.trim();
+    return minimizedText.trim();
   }
 }

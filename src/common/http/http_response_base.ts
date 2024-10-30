@@ -1,4 +1,4 @@
-export class BaseResponse {
+export class HttpResponseBase {
   public reason: string;
   public code: number;
 

@@ -6,7 +6,7 @@ import { SsmlGoogle } from '../input/ssml.js';
 import { EndpointsGoogle } from '../../common/constants.js';
 import { VoicesClientGoogle } from '../../voices/voices_client.js';
 import { AudioClientGoogle } from './audio_client.js';
-import { BaseResponse } from '../../../common/http/base_response.js';
+import { HttpResponseBase } from '../../../common/http/http_response_base.js';
 import { ConvertParamsGoogle } from '../convert_params.js';
 import { AudioHandler } from '../../../common/convert/audio/audio_handler.js';
 import { AudioJoiner } from '../../../common/convert/audio/audio_joiner.js';
@@ -26,7 +26,7 @@ export class AudioHandlerGoogle {
 
     let audioSuccesses: AudioSuccessGoogle[];
 
-    if (params.ssml || params.ssmlBatches) {
+    if (params.ssml || params.ssmlChunks) {
       audioSuccesses = await this.processFromSsml(params, audioClient, mapper);
     } else {
       audioSuccesses = await this.processFromText(params, audioClient, mapper);
@@ -44,7 +44,7 @@ export class AudioHandlerGoogle {
   ): Promise<AudioSuccessGoogle[]> {
     const ssml = new SsmlGoogle({
       ssml: params.ssml,
-      ssmlBatches: params.ssmlBatches,
+      ssmlChunks: params.ssmlChunks,
       rate: params.rate,
       pitch: params.pitch,
       voice: params.voice,
@@ -54,7 +54,7 @@ export class AudioHandlerGoogle {
 
     if (params.processOptions.processAsync) {
       return await AudioHandler.handleAsync<AudioSuccessGoogle>(
-        ssml.processedSsmlBatches(),
+        ssml.processedSsmlChunks(),
         async (batch) => {
           return await this.processItemFromSsml(
             params,
@@ -67,7 +67,7 @@ export class AudioHandlerGoogle {
       );
     } else {
       return await AudioHandler.handleSync<AudioSuccessGoogle>(
-        ssml.processedSsmlBatches(),
+        ssml.processedSsmlChunks(),
         async (batch) => {
           return await this.processItemFromSsml(
             params,
@@ -108,7 +108,7 @@ export class AudioHandlerGoogle {
         responseType: 'arraybuffer',
       });
 
-      const audioResponse: BaseResponse = mapper.map(response);
+      const audioResponse: HttpResponseBase = mapper.map(response);
 
       if (audioResponse instanceof AudioSuccessGoogle) {
         return audioResponse;
@@ -127,7 +127,7 @@ export class AudioHandlerGoogle {
   ): Promise<AudioSuccessGoogle[]> {
     const text = new TextGoogle({
       text: params.text,
-      textBatches: params.textBatches,
+      textChunks: params.textChunks,
       rate: params.rate,
       pitch: params.pitch,
       voice: params.voice,
@@ -137,7 +137,7 @@ export class AudioHandlerGoogle {
 
     if (params.processOptions.processAsync) {
       return await AudioHandler.handleAsync<AudioSuccessGoogle>(
-        text.processedTextBatches(),
+        text.processedTextChunks(),
         async (batch) => {
           return await this.processItemFromText(
             params,
@@ -150,7 +150,7 @@ export class AudioHandlerGoogle {
       );
     } else {
       return await AudioHandler.handleSync<AudioSuccessGoogle>(
-        text.processedTextBatches(),
+        text.processedTextChunks(),
         async (batch) => {
           return await this.processItemFromText(
             params,
@@ -191,7 +191,7 @@ export class AudioHandlerGoogle {
         responseType: 'arraybuffer',
       });
 
-      const audioResponse: BaseResponse = mapper.map(response);
+      const audioResponse: HttpResponseBase = mapper.map(response);
 
       if (audioResponse instanceof AudioSuccessGoogle) {
         return audioResponse;

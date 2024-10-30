@@ -2,7 +2,6 @@ import { VoiceUniversal } from '../voices/voice_model.js';
 import { ConvertAudioOptionsUniversal } from './convert_audio_options.js';
 import { ConvertProcessOptionsUniversal } from './convert_process_options.js';
 import { PITCH, RATE } from './convert_params_defaults.js';
-import { BaseProxyMapper } from '../../common/http/base_proxy.js';
 import {
   ConvertSsmlOptionsUniversal,
   ConvertTextOptionsUniversal,
@@ -13,27 +12,28 @@ import { ConvertSsmlOptionsAmazon } from '../../amazon/convert/convert_ssml_opti
 import { ConvertTextOptionsGoogle } from '../../google/convert/convert_text_options.js';
 import { ConvertTextOptionsMicrosoft } from '../../microsoft/convert/convert_text_options.js';
 import { ConvertTextOptionsAmazon } from '../../amazon/convert/convert_text_options.js';
+import { HttpProxyMapperOptionsUniversal } from '../voices/voices_options.js';
 
 export class ConvertParamsUniversal {
   voice: VoiceUniversal;
   ssml: string | undefined;
-  ssmlBatches: string[] | undefined;
+  ssmlChunks: string[] | undefined;
   text: string | undefined;
-  textBatches: string[] | undefined;
+  textChunks: string[] | undefined;
   rate: string;
   pitch: string;
   audioOptions: ConvertAudioOptionsUniversal;
   processOptions: ConvertProcessOptionsUniversal;
   ssmlOptions: ConvertSsmlOptionsUniversal;
   textOptions: ConvertTextOptionsUniversal;
-  httpProxy: BaseProxyMapper;
+  httpProxy: HttpProxyMapperOptionsUniversal;
 
   constructor({
     voice,
     ssml,
-    ssmlBatches,
+    ssmlChunks,
     text,
-    textBatches,
+    textChunks,
     rate,
     pitch,
     audioOptions,
@@ -44,34 +44,34 @@ export class ConvertParamsUniversal {
   }: {
     voice: VoiceUniversal;
     ssml?: string;
-    ssmlBatches?: string[];
+    ssmlChunks?: string[];
     text?: string;
-    textBatches?: string[];
+    textChunks?: string[];
     rate?: string;
     pitch?: string;
     audioOptions?: ConvertAudioOptionsUniversal;
     processOptions?: ConvertProcessOptionsUniversal;
     ssmlOptions?: ConvertSsmlOptionsUniversal;
     textOptions?: ConvertTextOptionsUniversal;
-    httpProxy?: BaseProxyMapper;
+    httpProxy?: HttpProxyMapperOptionsUniversal;
   }) {
-    if (!ssml && !ssmlBatches && !text && !textBatches) {
+    if (!ssml && !ssmlChunks && !text && !textChunks) {
       throw new Error(
-        'Either input, ssmlBatches, text or textBatches must be provided.',
+        'Either input, ssmlChunks, text or textChunks must be provided.',
       );
     }
 
-    if ([ssml, ssmlBatches, text, textBatches].filter(Boolean).length >= 2) {
+    if ([ssml, ssmlChunks, text, textChunks].filter(Boolean).length >= 2) {
       throw new Error(
-        'Only input, ssmlBatches, text or textBatches must be provided.',
+        'Only input, ssmlChunks, text or textChunks must be provided.',
       );
     }
 
     this.voice = voice;
     this.ssml = ssml;
-    this.ssmlBatches = ssmlBatches;
+    this.ssmlChunks = ssmlChunks;
     this.text = text;
-    this.textBatches = textBatches;
+    this.textChunks = textChunks;
     this.rate = rate ?? RATE;
     this.pitch = pitch ?? PITCH;
     this.audioOptions = audioOptions ?? new ConvertAudioOptionsUniversal();

@@ -1,10 +1,10 @@
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { BaseClient } from '../../common/http/base_client.js';
+import { HttpClientBase } from '../../common/http/http_client_base.js';
 import axiosRetry, { IAxiosRetryConfig } from 'axios-retry';
 import { ConfigAmazon } from '../common/config.js';
 import { aws4Interceptor } from 'aws4-axios';
 
-export class VoicesClientAmazon extends BaseClient {
+export class VoicesClientAmazon extends HttpClientBase {
   constructor(client: AxiosInstance) {
     const retryConfig: IAxiosRetryConfig = {
       retries: 3,

@@ -1,6 +1,6 @@
-import { BaseResponse } from '../../../common/http/base_response.js';
+import { HttpResponseBase } from '../../../common/http/http_response_base.js';
 
-export abstract class AudioResponseAmazon extends BaseResponse {
+export abstract class AudioResponseAmazon extends HttpResponseBase {
   protected constructor(code: number, reason: string) {
     super(code, reason);
   }

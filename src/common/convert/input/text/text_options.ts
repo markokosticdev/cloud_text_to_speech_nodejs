@@ -1,5 +1,4 @@
 export class TextOptions {
-  allowedElements: { [key: string]: string[] };
   splitLimit: number;
 
   constructor(

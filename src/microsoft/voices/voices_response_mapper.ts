@@ -10,7 +10,7 @@ import {
   VoicesFailedUnknownErrorMicrosoft,
   VoicesSuccessMicrosoft,
 } from './voices_responses.js';
-import { BaseResponse } from '../../common/http/base_response.js';
+import { HttpResponseBase } from '../../common/http/http_response_base.js';
 import { VoicesParamsMicrosoft } from './voices_params.js';
 
 export class VoicesResponseMapperMicrosoft implements BaseResponseMapper {
@@ -20,7 +20,7 @@ export class VoicesResponseMapperMicrosoft implements BaseResponseMapper {
     this.params = params;
   }
 
-  map(response: AxiosResponse): BaseResponse {
+  map(response: AxiosResponse): HttpResponseBase {
     switch (response.status) {
       case 200:
         const jsonData = response.data as Array<object>;

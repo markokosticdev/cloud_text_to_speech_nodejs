@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { BaseResponse } from './base_response.js';
+import { HttpResponseBase } from './http_response_base.js';
 
 export interface BaseResponseMapper {
-  map(response: AxiosResponse): BaseResponse;
+  map(response: AxiosResponse): HttpResponseBase;
 }

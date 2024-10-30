@@ -1,10 +1,10 @@
-import { BaseClient } from '../../../common/http/base_client.js';
+import { HttpClientBase } from '../../../common/http/http_client_base.js';
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { AuthenticationHeaderMicrosoft } from '../../auth/authentication_types.js';
 import axiosRetry, { IAxiosRetryConfig } from 'axios-retry';
 import { AudioTypeHeaderMicrosoft } from './audio_type_header.js';
 
-export class AudioClientMicrosoft extends BaseClient {
+export class AudioClientMicrosoft extends HttpClientBase {
   private _audioTypeHeader: AudioTypeHeaderMicrosoft;
 
   constructor(

@@ -1,6 +1,6 @@
-export type BaseProxyMapper = () => BaseProxy;
+export type HttpProxyMapperBase = () => HttpProxyBase;
 
-export class BaseProxy {
+export class HttpProxyBase {
   url: string | undefined;
   headers: Record<string, string> | undefined;
   params: Record<string, string> | undefined;

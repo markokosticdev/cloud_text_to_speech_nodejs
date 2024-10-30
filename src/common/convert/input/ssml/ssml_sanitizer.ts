@@ -44,10 +44,16 @@ export class SsmlSanitizer {
         const children = Array.from(element.childNodes).map((node) =>
           node.cloneNode(true),
         );
-        const nextSibling = element.nextSibling;
+        const nextSibling: Node = element.nextSibling;
         parent.removeChild(element);
         children.forEach((child) => {
-          parent.insertBefore(child, nextSibling);
+          if (nextSibling) {
+            parent.insertBefore(child, nextSibling);
+          } else {
+            if (child.nodeType == node.TEXT_NODE) {
+              parent.appendChild(child);
+            }
+          }
         });
       } else {
         const allowedAttributes = allowedElements[element.nodeName] || [];

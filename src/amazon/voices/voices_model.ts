@@ -5,7 +5,6 @@ import { VoiceBase } from '../../common/voices/voices_base.js';
 
 export class VoiceAmazon extends VoiceBase {
   constructor({
-    provider = TtsProviders.amazon,
     engines,
     code,
     name,
@@ -13,7 +12,6 @@ export class VoiceAmazon extends VoiceBase {
     gender,
     locale,
   }: {
-    provider: string;
     engines: string[];
     code: string;
     name: string;
@@ -22,7 +20,7 @@ export class VoiceAmazon extends VoiceBase {
     locale: VoiceLocale;
   }) {
     super({
-      provider,
+      provider: TtsProviders.amazon,
       engines,
       code,
       name,
@@ -37,7 +35,6 @@ export class VoiceAmazon extends VoiceBase {
     const locale = this._toLocale(json['LanguageCode']);
 
     return new VoiceAmazon({
-      provider: json['provider'] || TtsProviders.amazon,
       engines,
       code: json['Id'],
       name: json['Id'],

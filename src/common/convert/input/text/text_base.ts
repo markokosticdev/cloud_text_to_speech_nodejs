@@ -1,11 +1,11 @@
 import { TextSanitizer } from './text_sanitizer.js';
 import { TextMinimizer } from './text_minimizer.js';
 import { TextSplitter } from './text_splitter.js';
-import { SsmlOptions } from '../ssml/ssml_options.js';
+import { TextOptions } from '../text/text_options.js';
 
-export abstract class TextBase<V, O extends SsmlOptions> {
+export abstract class TextBase<V, O extends TextOptions> {
   text: string | undefined;
-  textBatches: string[] | undefined;
+  textChunks: string[] | undefined;
   rate: string;
   pitch: string;
   voice: V | undefined;
@@ -14,7 +14,7 @@ export abstract class TextBase<V, O extends SsmlOptions> {
 
   constructor({
     text,
-    textBatches,
+    textChunks,
     rate,
     pitch,
     voice,
@@ -22,7 +22,7 @@ export abstract class TextBase<V, O extends SsmlOptions> {
     options,
   }: {
     text?: string;
-    textBatches?: string[];
+    textChunks?: string[];
     rate: string;
     pitch: string;
     voice?: V;
@@ -37,16 +37,16 @@ export abstract class TextBase<V, O extends SsmlOptions> {
       throw new Error('Only voice or voiceId must be provided.');
     }
 
-    if (!text && !textBatches) {
-      throw new Error('Either input or textBatches must be provided.');
+    if (!text && !textChunks) {
+      throw new Error('Either input or textChunks must be provided.');
     }
 
-    if (text && textBatches) {
-      throw new Error('Only input or textBatches must be provided.');
+    if (text && textChunks) {
+      throw new Error('Only input or textChunks must be provided.');
     }
 
     this.text = text;
-    this.textBatches = textBatches;
+    this.textChunks = textChunks;
     this.rate = rate;
     this.pitch = pitch;
     this.voice = voice;
@@ -54,9 +54,9 @@ export abstract class TextBase<V, O extends SsmlOptions> {
     this.options = options;
   }
 
-  processedTextBatches(): string[] {
-    if (this.textBatches) {
-      return this.textBatches.map((text) => {
+  processedTextChunks(): string[] {
+    if (this.textChunks) {
+      return this.textChunks.map((text) => {
         const sanitizedText = TextSanitizer.sanitize(text);
         const minimizedText = TextMinimizer.minimize(sanitizedText);
         return this.textRootTemplate(minimizedText);
@@ -64,7 +64,7 @@ export abstract class TextBase<V, O extends SsmlOptions> {
     } else {
       const sanitizedText = TextSanitizer.sanitize(this.text);
       const minimizedText = TextMinimizer.minimize(sanitizedText);
-      return TextSplitter.spit(
+      return TextSplitter.split(
         minimizedText,
         (text) => this.textRootTemplate(text),
         this.options,

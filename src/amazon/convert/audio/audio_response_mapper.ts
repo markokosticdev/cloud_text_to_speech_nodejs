@@ -1,6 +1,6 @@
 import { BaseResponseMapper } from '../../../common/http/base_response_mapper.js';
 import { AxiosResponse } from 'axios';
-import { BaseResponse } from '../../../common/http/base_response.js';
+import { HttpResponseBase } from '../../../common/http/http_response_base.js';
 import {
   AudioFailedBadGatewayAmazon,
   AudioFailedBadRequestAmazon,
@@ -12,7 +12,7 @@ import {
 } from './audio_responses.js';
 
 export class AudioResponseMapperAmazon implements BaseResponseMapper {
-  map(response: AxiosResponse): BaseResponse {
+  map(response: AxiosResponse): HttpResponseBase {
     switch (response.status) {
       case 200:
         return new AudioSuccessAmazon(response.data);

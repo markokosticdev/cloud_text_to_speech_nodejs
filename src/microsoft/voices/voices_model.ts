@@ -10,7 +10,6 @@ export class VoiceMicrosoft extends VoiceBase {
   wordsPerMinute?: string;
 
   constructor({
-    provider = TtsProviders.microsoft,
     engines,
     code,
     name,
@@ -22,7 +21,6 @@ export class VoiceMicrosoft extends VoiceBase {
     status,
     wordsPerMinute,
   }: {
-    provider: string;
     engines: string[];
     code: string;
     name: string;
@@ -35,7 +33,7 @@ export class VoiceMicrosoft extends VoiceBase {
     wordsPerMinute?: string;
   }) {
     super({
-      provider,
+      provider: TtsProviders.microsoft,
       engines,
       code,
       name,
@@ -54,7 +52,6 @@ export class VoiceMicrosoft extends VoiceBase {
     const locale = this._toLocale(json['Locale']);
 
     return new VoiceMicrosoft({
-      provider: json['provider'] || TtsProviders.microsoft,
       engines,
       code: json['ShortName'],
       name: json['DisplayName'],

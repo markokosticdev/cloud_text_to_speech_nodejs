@@ -5,7 +5,7 @@ import { SsmlOptions } from './ssml_options.js';
 
 export abstract class SsmlBase<V, O extends SsmlOptions> {
   ssml: string | undefined;
-  ssmlBatches: string[] | undefined;
+  ssmlChunks: string[] | undefined;
   rate: string;
   pitch: string;
   voice: V | undefined;
@@ -14,7 +14,7 @@ export abstract class SsmlBase<V, O extends SsmlOptions> {
 
   constructor({
     ssml,
-    ssmlBatches,
+    ssmlChunks,
     rate,
     pitch,
     voice,
@@ -22,7 +22,7 @@ export abstract class SsmlBase<V, O extends SsmlOptions> {
     options,
   }: {
     ssml?: string;
-    ssmlBatches?: string[];
+    ssmlChunks?: string[];
     rate: string;
     pitch: string;
     voice?: V;
@@ -37,16 +37,16 @@ export abstract class SsmlBase<V, O extends SsmlOptions> {
       throw new Error('Only voice or voiceId must be provided.');
     }
 
-    if (!ssml && !ssmlBatches) {
-      throw new Error('Either input or ssmlBatches must be provided.');
+    if (!ssml && !ssmlChunks) {
+      throw new Error('Either input or ssmlChunks must be provided.');
     }
 
-    if (ssml && ssmlBatches) {
-      throw new Error('Only input or ssmlBatches must be provided.');
+    if (ssml && ssmlChunks) {
+      throw new Error('Only input or ssmlChunks must be provided.');
     }
 
     this.ssml = ssml;
-    this.ssmlBatches = ssmlBatches;
+    this.ssmlChunks = ssmlChunks;
     this.rate = rate;
     this.pitch = pitch;
     this.voice = voice;
@@ -60,9 +60,9 @@ export abstract class SsmlBase<V, O extends SsmlOptions> {
 
   protected abstract get allowedElements(): { [key: string]: string[] };
 
-  processedSsmlBatches(): string[] {
-    if (this.ssmlBatches) {
-      return this.ssmlBatches.map((ssml) => {
+  processedSsmlChunks(): string[] {
+    if (this.ssmlChunks) {
+      return this.ssmlChunks.map((ssml) => {
         const sanitizedSsml = SsmlSanitizer.sanitize(
           ssml,
           this.allowedElements,

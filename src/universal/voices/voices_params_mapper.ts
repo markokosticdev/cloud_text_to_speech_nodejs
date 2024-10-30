@@ -7,7 +7,7 @@ export class VoicesParamsMapper {
   static toGoogle(universalParams: VoicesParamsUniversal): VoicesParamsGoogle {
     return new VoicesParamsGoogle({
       nameOptions: universalParams.nameOptions.google,
-      httpProxy: universalParams.httpProxy,
+      httpProxy: universalParams.httpProxy.google,
     });
   }
 
@@ -16,14 +16,14 @@ export class VoicesParamsMapper {
   ): VoicesParamsMicrosoft {
     return new VoicesParamsMicrosoft({
       nameOptions: universalParams.nameOptions.microsoft,
-      httpProxy: universalParams.httpProxy,
+      httpProxy: universalParams.httpProxy.microsoft,
     });
   }
 
   static toAmazon(universalParams: VoicesParamsUniversal): VoicesParamsAmazon {
     return new VoicesParamsAmazon({
       nameOptions: universalParams.nameOptions.amazon,
-      httpProxy: universalParams.httpProxy,
+      httpProxy: universalParams.httpProxy.amazon,
     });
   }
 }

@@ -3,13 +3,11 @@ import { Log } from './log.js';
 import { VoiceBase } from '../voices/voices_base.js';
 import { NameOptions } from '../voices/input/name_options.js';
 
-// import * as fs from "fs";
-
 export class Helpers {
   private constructor() {}
 
   static shuffleNamesByText(names: string[], text: string): string[] {
-    if (names.length) {
+    if (names.length == 0) {
       return [];
     }
 
@@ -40,7 +38,7 @@ export class Helpers {
     return shuffledNames;
   }
 
-  static mapVoiceNamess<T extends VoiceBase>(
+  static mapVoiceNames<T extends VoiceBase>(
     voices: T[],
     options: NameOptions<T>,
   ): T[] {
@@ -62,7 +60,10 @@ export class Helpers {
           maleIndex: 0,
           maleNames: this.shuffleNamesByText(options.maleNames ?? [], locale),
           femaleIndex: 0,
-          femaleNames: this.shuffleNamesByText(options.maleNames ?? [], locale),
+          femaleNames: this.shuffleNamesByText(
+            options.femaleNames ?? [],
+            locale,
+          ),
         };
       }
 
@@ -70,8 +71,8 @@ export class Helpers {
       let name: string;
 
       switch (gender) {
-        case 'male':
-          if (nameRecord.maleNames) {
+        case 'Male':
+          if (nameRecord.maleNames.length) {
             if (nameRecord.maleIndex >= nameRecord.maleNames.length) {
               nameRecord.maleIndex = 0;
             }
@@ -83,10 +84,10 @@ export class Helpers {
             name = voice.name;
           }
           break;
-        case 'female':
-        case 'neutral':
+        case 'Female':
+        case 'Neutral':
         default:
-          if (nameRecord.femaleNames) {
+          if (nameRecord.femaleNames.length) {
             if (nameRecord.femaleIndex >= nameRecord.femaleNames.length) {
               nameRecord.femaleIndex = 0;
             }
@@ -106,51 +107,6 @@ export class Helpers {
     });
   }
 
-  static mapVoiceNames<T extends VoiceBase>(
-    voices: T[],
-    options: NameOptions<T>,
-  ): T[] {
-    let locale = '';
-    let gender = '';
-    let names: string[] = [];
-    let nameIndex = 0;
-
-    voices = Helpers.sortVoices(voices);
-
-    return voices.map((voice) => {
-      if (locale !== voice.locale.code || gender !== voice.gender) {
-        nameIndex = 0;
-        locale = voice.locale.code;
-        gender = voice.gender;
-        switch (gender.toLowerCase()) {
-          case 'male':
-            names = options.maleNames
-              ? this.shuffleNamesByText(options.maleNames, locale)
-              : [];
-            break;
-          case 'female':
-          case 'neutral':
-          default:
-            names = options.femaleNames
-              ? this.shuffleNamesByText(options.femaleNames, locale)
-              : [];
-        }
-      }
-
-      if (names.length > 0) {
-        if (nameIndex >= names.length) {
-          nameIndex = 0;
-        }
-
-        voice.name = names[nameIndex];
-        voice.nativeName = names[nameIndex];
-      }
-
-      nameIndex++;
-      return voice;
-    });
-  }
-
   static removeVoiceDuplicates<T extends VoiceBase>(voices: T[]): T[] {
     const uniqueCodes = new Set<string>();
 
@@ -165,7 +121,10 @@ export class Helpers {
 
   static sortVoices<T extends VoiceBase>(voices: T[]): T[] {
     const validVoices = voices.filter((voice) => {
-      if (typeof voice.locale.name !== 'string') {
+      if (
+        typeof voice.locale.name !== 'string' ||
+        voice.locale.name.length == 0
+      ) {
         Log.d(
           `Invalid voice data, removing from sort: ${JSON.stringify(voice)}`,
         );

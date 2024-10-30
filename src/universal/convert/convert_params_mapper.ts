@@ -27,9 +27,9 @@ export class ConvertParamsMapper {
         locale: universalParams.voice.locale,
       }),
       ssml: universalParams.ssml,
-      ssmlBatches: universalParams.ssmlBatches,
+      ssmlChunks: universalParams.ssmlChunks,
       text: universalParams.text,
-      textBatches: universalParams.textBatches,
+      textChunks: universalParams.textChunks,
       rate: universalParams.rate,
       pitch: universalParams.pitch,
       audioOptions: new ConvertAudioOptionsGoogle({
@@ -47,7 +47,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.google,
       textOptions: universalParams.textOptions.google,
-      httpProxy: universalParams.httpProxy,
+      httpProxy: universalParams.httpProxy.google,
     });
   }
 
@@ -65,9 +65,9 @@ export class ConvertParamsMapper {
         locale: universalParams.voice.locale,
       }),
       ssml: universalParams.ssml,
-      ssmlBatches: universalParams.ssmlBatches,
+      ssmlChunks: universalParams.ssmlChunks,
       text: universalParams.text,
-      textBatches: universalParams.textBatches,
+      textChunks: universalParams.textChunks,
       rate: universalParams.rate,
       pitch: universalParams.pitch,
       audioOptions: new ConvertAudioOptionsMicrosoft({
@@ -85,7 +85,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.microsoft,
       textOptions: universalParams.textOptions.microsoft,
-      httpProxy: universalParams.httpProxy,
+      httpProxy: universalParams.httpProxy.microsoft,
     });
   }
 
@@ -103,9 +103,9 @@ export class ConvertParamsMapper {
         locale: universalParams.voice.locale,
       }),
       ssml: universalParams.ssml,
-      ssmlBatches: universalParams.ssmlBatches,
+      ssmlChunks: universalParams.ssmlChunks,
       text: universalParams.text,
-      textBatches: universalParams.textBatches,
+      textChunks: universalParams.textChunks,
       rate: universalParams.rate,
       pitch: universalParams.pitch,
       audioOptions: new ConvertAudioOptionsAmazon({
@@ -123,7 +123,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.amazon,
       textOptions: universalParams.textOptions.amazon,
-      httpProxy: universalParams.httpProxy,
+      httpProxy: universalParams.httpProxy.amazon,
     });
   }
 }

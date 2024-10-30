@@ -1,4 +1,4 @@
-export abstract class BaseHeader {
+export abstract class HttpHeaderBase {
   private readonly _type: string;
 
   ///[value] The value assigned to the [type].
@@ -8,7 +8,6 @@ export abstract class BaseHeader {
   }
 
   ///[type] The type of Header to use.
-
   private _value: string;
 
   get value(): string {

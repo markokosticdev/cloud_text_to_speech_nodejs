@@ -4,34 +4,15 @@ import { ConvertSsmlOptionsAmazon } from '../../amazon/convert/convert_ssml_opti
 import { ConvertTextOptionsGoogle } from '../../google/convert/convert_text_options.js';
 import { ConvertTextOptionsMicrosoft } from '../../microsoft/convert/convert_text_options.js';
 import { ConvertTextOptionsAmazon } from '../../amazon/convert/convert_text_options.js';
+import { ParamOptionsUniversal } from '../common/param_options.js';
 
-export class ConvertOptionsUniversal<G, M, A> {
-  google: G;
-  microsoft: M;
-  amazon: A;
-
-  constructor({
-    google,
-    microsoft,
-    amazon,
-  }: {
-    google?: G;
-    microsoft?: M;
-    amazon?: A;
-  } = {}) {
-    this.google = google;
-    this.microsoft = microsoft;
-    this.amazon = amazon;
-  }
-}
-
-export class ConvertSsmlOptionsUniversal extends ConvertOptionsUniversal<
+export class ConvertSsmlOptionsUniversal extends ParamOptionsUniversal<
   ConvertSsmlOptionsGoogle,
   ConvertSsmlOptionsMicrosoft,
   ConvertSsmlOptionsAmazon
 > {}
 
-export class ConvertTextOptionsUniversal extends ConvertOptionsUniversal<
+export class ConvertTextOptionsUniversal extends ParamOptionsUniversal<
   ConvertTextOptionsGoogle,
   ConvertTextOptionsMicrosoft,
   ConvertTextOptionsAmazon

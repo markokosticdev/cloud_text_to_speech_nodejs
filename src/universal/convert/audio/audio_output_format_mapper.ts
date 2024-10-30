@@ -2,6 +2,7 @@ import { AudioOutputFormatUniversal } from './audio_output_format.js';
 import { AudioOutputFormatGoogle } from '../../../google/convert/audio/audio_output_format.js';
 import { AudioOutputFormatMicrosoft } from '../../../microsoft/convert/audio/audio_output_format.js';
 import { AudioOutputFormatAmazon } from '../../../amazon/convert/audio/audio_output_format.js';
+import { ParamOptionsUniversal } from '../../common/param_options.js';
 
 export type AudioFormatMapperGoogle = (
   universalFormat: AudioOutputFormatUniversal,
@@ -13,23 +14,36 @@ export type AudioFormatMapperAmazon = (
   universalFormat: AudioOutputFormatUniversal,
 ) => AudioOutputFormatAmazon;
 
-export class AudioOutputFormatMapperUniversal {
-  mapperGoogle: AudioFormatMapperGoogle | undefined;
-  mapperMicrosoft: AudioFormatMapperMicrosoft | undefined;
-  mapperAmazon: AudioFormatMapperAmazon | undefined;
+export class AudioOutputFormatMapperUniversal extends ParamOptionsUniversal<
+  AudioFormatMapperGoogle,
+  AudioFormatMapperMicrosoft,
+  AudioFormatMapperAmazon
+> {
+  toGoogle(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatGoogle {
+    if (this.google) {
+      return this.google(universalFormat);
+    }
+    return AudioOutputFormatMapperUniversal.defaultToGoogle(universalFormat);
+  }
 
-  constructor({
-    mapperGoogle,
-    mapperMicrosoft,
-    mapperAmazon,
-  }: {
-    mapperGoogle?: AudioFormatMapperGoogle;
-    mapperMicrosoft?: AudioFormatMapperMicrosoft;
-    mapperAmazon?: AudioFormatMapperAmazon;
-  } = {}) {
-    this.mapperGoogle = mapperGoogle;
-    this.mapperMicrosoft = mapperMicrosoft;
-    this.mapperAmazon = mapperAmazon;
+  toMicrosoft(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatMicrosoft {
+    if (this.microsoft) {
+      return this.microsoft(universalFormat);
+    }
+    return AudioOutputFormatMapperUniversal.defaultToMicrosoft(universalFormat);
+  }
+
+  toAmazon(
+    universalFormat: AudioOutputFormatUniversal,
+  ): AudioOutputFormatAmazon {
+    if (this.amazon) {
+      return this.amazon(universalFormat);
+    }
+    return AudioOutputFormatMapperUniversal.defaultToAmazon(universalFormat);
   }
 
   static defaultToGoogle(
@@ -102,32 +116,5 @@ export class AudioOutputFormatMapperUniversal {
       default:
         throw new Error(`Format ${universalFormat} is not supported`);
     }
-  }
-
-  toGoogle(
-    universalFormat: AudioOutputFormatUniversal,
-  ): AudioOutputFormatGoogle {
-    if (this.mapperGoogle) {
-      return this.mapperGoogle(universalFormat);
-    }
-    return AudioOutputFormatMapperUniversal.defaultToGoogle(universalFormat);
-  }
-
-  toMicrosoft(
-    universalFormat: AudioOutputFormatUniversal,
-  ): AudioOutputFormatMicrosoft {
-    if (this.mapperMicrosoft) {
-      return this.mapperMicrosoft(universalFormat);
-    }
-    return AudioOutputFormatMapperUniversal.defaultToMicrosoft(universalFormat);
-  }
-
-  toAmazon(
-    universalFormat: AudioOutputFormatUniversal,
-  ): AudioOutputFormatAmazon {
-    if (this.mapperAmazon) {
-      return this.mapperAmazon(universalFormat);
-    }
-    return AudioOutputFormatMapperUniversal.defaultToAmazon(universalFormat);
   }
 }

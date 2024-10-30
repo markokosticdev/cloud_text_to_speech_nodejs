@@ -7,7 +7,6 @@ export class VoiceGoogle extends VoiceBase {
   sampleRateHertz?: string;
 
   constructor({
-    provider = TtsProviders.google,
     engines,
     code,
     name,
@@ -16,7 +15,6 @@ export class VoiceGoogle extends VoiceBase {
     locale,
     sampleRateHertz,
   }: {
-    provider: string;
     engines: string[];
     code: string;
     name: string;
@@ -26,7 +24,7 @@ export class VoiceGoogle extends VoiceBase {
     sampleRateHertz?: string;
   }) {
     super({
-      provider,
+      provider: TtsProviders.google,
       engines,
       code,
       name,
@@ -43,7 +41,6 @@ export class VoiceGoogle extends VoiceBase {
     const locale = this._toLocale(json['languageCodes']);
 
     return new VoiceGoogle({
-      provider: json['provider'] || TtsProviders.google,
       engines,
       code: json['name'],
       name: json['name'],

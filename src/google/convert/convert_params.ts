@@ -3,31 +3,31 @@ import { ConvertAudioOptionsGoogle } from './convert_audio_options.js';
 import { ConvertProcessOptionsGoogle } from './convert_process_options.js';
 import { PITCH, RATE } from './convert_params_defaults.js';
 import { ConvertSsmlOptionsGoogle } from './convert_ssml_options.js';
-import { BaseProxyMapper } from '../../common/http/base_proxy.js';
+import { HttpProxyMapperBase } from '../../common/http/http_proxy_base.js';
 import { ConvertTextOptionsGoogle } from './convert_text_options.js';
 
 export class ConvertParamsGoogle {
   voice: VoiceGoogle | undefined;
   voiceId: string | undefined;
   ssml: string | undefined;
-  ssmlBatches: string[] | undefined;
+  ssmlChunks: string[] | undefined;
   text: string | undefined;
-  textBatches: string[] | undefined;
+  textChunks: string[] | undefined;
   rate: string;
   pitch: string;
   audioOptions: ConvertAudioOptionsGoogle;
   processOptions: ConvertProcessOptionsGoogle;
   ssmlOptions: ConvertSsmlOptionsGoogle;
   textOptions: ConvertTextOptionsGoogle;
-  httpProxy: BaseProxyMapper;
+  httpProxy: HttpProxyMapperBase;
 
   constructor({
     voice,
     voiceId,
     ssml,
-    ssmlBatches,
+    ssmlChunks,
     text,
-    textBatches,
+    textChunks,
     rate,
     pitch,
     audioOptions,
@@ -39,16 +39,16 @@ export class ConvertParamsGoogle {
     voice?: VoiceGoogle;
     voiceId?: string;
     ssml?: string;
-    ssmlBatches?: string[];
+    ssmlChunks?: string[];
     text?: string;
-    textBatches?: string[];
+    textChunks?: string[];
     rate?: string;
     pitch?: string;
     audioOptions?: ConvertAudioOptionsGoogle;
     processOptions?: ConvertProcessOptionsGoogle;
     ssmlOptions?: ConvertSsmlOptionsGoogle;
     textOptions?: ConvertTextOptionsGoogle;
-    httpProxy?: BaseProxyMapper;
+    httpProxy?: HttpProxyMapperBase;
   }) {
     if (!voice && !voiceId) {
       throw new Error('Either voice or voiceId must be provided.');
@@ -58,24 +58,24 @@ export class ConvertParamsGoogle {
       throw new Error('Only voice or voiceId must be provided.');
     }
 
-    if (!ssml && !ssmlBatches && !text && !textBatches) {
+    if (!ssml && !ssmlChunks && !text && !textChunks) {
       throw new Error(
-        'Either input, ssmlBatches, text or textBatches must be provided.',
+        'Either input, ssmlChunks, text or textChunks must be provided.',
       );
     }
 
-    if ([ssml, ssmlBatches, text, textBatches].filter(Boolean).length >= 2) {
+    if ([ssml, ssmlChunks, text, textChunks].filter(Boolean).length >= 2) {
       throw new Error(
-        'Only input, ssmlBatches, text or textBatches must be provided.',
+        'Only input, ssmlChunks, text or textChunks must be provided.',
       );
     }
 
     this.voice = voice;
     this.voiceId = voiceId;
     this.ssml = ssml;
-    this.ssmlBatches = ssmlBatches;
+    this.ssmlChunks = ssmlChunks;
     this.text = text;
-    this.textBatches = textBatches;
+    this.textChunks = textChunks;
     this.rate = rate ?? RATE;
     this.pitch = pitch ?? PITCH;
     this.audioOptions = audioOptions ?? new ConvertAudioOptionsGoogle();

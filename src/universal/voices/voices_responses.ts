@@ -1,7 +1,7 @@
-import { BaseResponse } from '../../common/http/base_response.js';
+import { HttpResponseBase } from '../../common/http/http_response_base.js';
 import { VoiceUniversal } from './voice_model.js';
 
-export class VoicesResponseUniversal extends BaseResponse {
+export class VoicesResponseUniversal extends HttpResponseBase {
   constructor(code: number, reason: string) {
     super(code, reason);
   }

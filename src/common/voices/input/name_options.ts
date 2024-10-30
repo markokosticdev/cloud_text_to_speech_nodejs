@@ -35,10 +35,30 @@ export class NameOptions<T extends VoiceBase> {
       );
     }
 
-    this.maleNames = options.maleNames ?? defaults.maleNames;
-    this.maleNamesMapper = options.maleNamesMapper ?? defaults.maleNamesMapper;
-    this.femaleNames = options.femaleNames ?? defaults.femaleNames;
-    this.femaleNamesMapper =
-      options.femaleNamesMapper ?? defaults.femaleNamesMapper;
+    if (options.maleNamesMapper) {
+      this.maleNames = options.maleNames;
+    } else {
+      this.maleNames = options.maleNames ?? defaults.maleNames;
+    }
+
+    if (options.maleNames) {
+      this.maleNamesMapper = options.maleNamesMapper;
+    } else {
+      this.maleNamesMapper =
+        options.maleNamesMapper ?? defaults.maleNamesMapper;
+    }
+
+    if (options.femaleNamesMapper) {
+      this.femaleNames = options.femaleNames;
+    } else {
+      this.femaleNames = options.femaleNames ?? defaults.femaleNames;
+    }
+
+    if (options.femaleNames) {
+      this.femaleNamesMapper = options.femaleNamesMapper;
+    } else {
+      this.femaleNamesMapper =
+        options.femaleNamesMapper ?? defaults.femaleNamesMapper;
+    }
   }
 }
