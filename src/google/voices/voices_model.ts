@@ -52,8 +52,12 @@ export class VoiceGoogle extends VoiceBase {
   }
 
   private static _toEngines(name: string): string[] {
-    const nameSegments = name.split('-');
-    return [nameSegments[2].toLowerCase()];
+    if (name.includes('-')) {
+      const nameSegments = name.split('-');
+      return [nameSegments[2].toLowerCase()];
+    } else {
+      return [name.toLowerCase()];
+    }
   }
 
   private static _toGender(ssmlGender: string): string {

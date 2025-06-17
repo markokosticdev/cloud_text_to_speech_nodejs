@@ -7,7 +7,13 @@ export default {
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.(m)?js$': '$1',
   },
-  testRegex: '(/tests/.*|(\\.|/)(test|spec))\\.(m)?ts$',
+  testRegex: '(/tests/.*_test|(\\.|/)(test|spec))\\.(m)?ts$',
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/build/',
+    '/tests/.*/mocks/.*',
+    '\\.d\\.ts$'
+  ],
   coverageDirectory: 'coverage',
   collectCoverageFrom: [
     'src/**/*.ts',

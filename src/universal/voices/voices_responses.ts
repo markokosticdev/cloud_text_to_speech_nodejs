@@ -1,5 +1,5 @@
 import { HttpResponseBase } from '../../common/http/http_response_base.js';
-import { VoiceUniversal } from './voice_model.js';
+import { VoiceUniversal } from './voices_model.js';
 
 export class VoicesResponseUniversal extends HttpResponseBase {
   constructor(code: number, reason: string) {

@@ -9,9 +9,9 @@ import { AudioOutputFormatMapperUniversal } from './audio/audio_output_format_ma
 
 export class ConvertAudioOptionsUniversal {
   audioFormat: AudioOutputFormatUniversal;
-  audioFormatMapper: AudioOutputFormatMapperUniversal;
+  audioFormatMapper: AudioOutputFormatMapperUniversal | undefined;
   audioStreamFormat: AudioOutputStreamFormatUniversal;
-  audioStreamFormatMapper: AudioOutputStreamFormatMapperUniversal;
+  audioStreamFormatMapper: AudioOutputStreamFormatMapperUniversal | undefined;
 
   constructor({
     audioFormat,

@@ -20,7 +20,9 @@ export class SsmlSplitter {
 
     if (adjustedSplitLimit <= minimumContentLength) {
       throw new Error(
-        `Split limit is too small to split the SSML. It must be greater than the length of the root template plus ${minimumContentLength}, which is ${rootTemplateLength + minimumContentLength}.`,
+        `Split limit is too small to split the SSML. It must be greater than the length of the root template plus ${minimumContentLength}, which is ${
+          rootTemplateLength + minimumContentLength
+        }.`,
       );
     }
 
@@ -33,7 +35,8 @@ export class SsmlSplitter {
 
     const chunks: string[] = [];
     let currentChunk: string = '';
-    let currentLength: number = 0;
+    let currentTextLength: number = 0;
+    let hasTextContent: boolean = false;
 
     const getOpenTag = (element: Element): string => {
       const attributes = Array.from(element.attributes)
@@ -57,118 +60,137 @@ export class SsmlSplitter {
       }
     };
 
-    const getOpenTags = (ancestors: Element[]): string => {
-      return ancestors
-        .map((element) => getOpenTag(element))
-        .join('');
-    };
-
-    const getCloseTags = (ancestors: Element[]): string => {
-      return ancestors
+    const getAncestorTagsLength = (ancestors: Element[]): number => {
+      const openTagsLength = ancestors
+        .map((element) => getOpenTag(element).length)
+        .reduce((sum, len) => sum + len, 0);
+      const closeTagsLength = ancestors
         .slice()
         .reverse()
-        .map((element) => getCloseTag(element))
-        .join('');
+        .map((element) => getCloseTag(element).length)
+        .reduce((sum, len) => sum + len, 0);
+      return openTagsLength + closeTagsLength;
     };
 
     const processNode = (node: Node, ancestors: Element[]): void => {
       if (node.nodeType === node.ELEMENT_NODE) {
         const element = node as Element;
 
-        const openTag = getOpenTag(element);
-        const closeTag = getCloseTag(element);
-
-        // Push the current element onto the ancestors stack
-        ancestors.push(element);
-
-        // Handle opening the element
-        if (currentLength + openTag.length > adjustedSplitLimit && currentLength > 0) {
-          // Close all open tags before starting a new chunk
-          currentChunk += getCloseTags(ancestors.slice(0, -1));
-          if (currentChunk.trim()) {
-            chunks.push(rootTemplateMinimized(currentChunk));
-          }
-          currentChunk = '';
-          currentLength = 0;
-
-          // Reopen ancestor tags for the new chunk
-          currentChunk += getOpenTags(ancestors.slice(0, -1));
-          currentLength += currentChunk.length;
+        // For self-closing elements, add them directly to the chunk
+        if (element.childNodes.length === 0) {
+          const selfClosingTag = getOpenTag(element);
+          currentChunk += selfClosingTag;
+          // Self-closing tags don't contribute to text length for splitting purposes
+          // but we should check if they have significant impact on chunk size
+          return;
         }
 
+        // For elements with children, add opening tag
+        const openTag = getOpenTag(element);
         currentChunk += openTag;
-        currentLength += openTag.length;
+        
+        // Push the current element onto the ancestors stack
+        ancestors.push(element);
 
         // Recursively process child nodes
         Array.from(element.childNodes).forEach((childNode) => {
           processNode(childNode, ancestors);
         });
 
-        currentChunk += closeTag;
-        currentLength += closeTag.length;
-
         // Pop the current element from the ancestors stack
         ancestors.pop();
+        
+        // Add closing tag
+        const closeTag = getCloseTag(element);
+        currentChunk += closeTag;
       } else if (node.nodeType === node.TEXT_NODE) {
         const text = node.nodeValue || '';
         let currentPosition = 0;
 
         while (currentPosition < text.length) {
-          const splitPosition = Math.min(
-            currentPosition + adjustedSplitLimit - currentLength,
-            text.length,
-          );
+          const ancestorTagsLength = getAncestorTagsLength(ancestors);
+          const availableLength = adjustedSplitLimit - ancestorTagsLength;
 
-          let nearestDelimiter = text.lastIndexOf('.', splitPosition);
+          let splitPosition: number;
 
-          while (text[nearestDelimiter + 1] === '.') {
-            nearestDelimiter++;
+          if (availableLength <= 0) {
+            // Ancestor tags alone exceed splitLimit
+            // Split after 15 characters or at first blank space
+            splitPosition = currentPosition + 15;
+            const nextSpace = text.indexOf(' ', splitPosition);
+            if (nextSpace !== -1) {
+              splitPosition = nextSpace + 1;
+            } else {
+              splitPosition = Math.min(splitPosition, text.length);
+            }
+          } else {
+            // Split based on available length
+            splitPosition = currentPosition + availableLength - currentTextLength;
+            splitPosition = Math.min(splitPosition, text.length);
+
+            // Try to split at nearest delimiter
+            let nearestDelimiter = -1;
+            const delimiters = ['.', ';', ',', ' '];
+            for (const delimiter of delimiters) {
+              const index = text.lastIndexOf(delimiter, splitPosition);
+              if (index > currentPosition) {
+                nearestDelimiter = index + 1;
+                break;
+              }
+            }
+            if (nearestDelimiter > currentPosition) {
+              splitPosition = nearestDelimiter;
+            }
           }
 
-          if (nearestDelimiter === -1 || nearestDelimiter <= currentPosition) {
-            nearestDelimiter = text.lastIndexOf(';', splitPosition);
-          }
-          if (nearestDelimiter === -1 || nearestDelimiter <= currentPosition) {
-            nearestDelimiter = text.lastIndexOf(',', splitPosition);
-          }
-          if (nearestDelimiter === -1 || nearestDelimiter <= currentPosition) {
-            nearestDelimiter = text.lastIndexOf(' ', splitPosition);
-          }
-          if (nearestDelimiter === -1 || nearestDelimiter <= currentPosition) {
-            nearestDelimiter = splitPosition - 1;
-          }
-
-          const nearestDelimiterAdjusted = nearestDelimiter + 1;
-
-          const chunkText = text.slice(currentPosition, nearestDelimiterAdjusted);
-
+          const chunkText = text.slice(currentPosition, splitPosition);
           currentChunk += chunkText;
-          currentLength += chunkText.length;
-          currentPosition = nearestDelimiterAdjusted;
+          currentTextLength += chunkText.length;
+          currentPosition = splitPosition;
 
-          if (currentLength >= adjustedSplitLimit || currentPosition < text.length) {
+          if (/\S/.test(chunkText)) {
+            hasTextContent = true;
+          }
+
+          // Check if we need to start a new chunk
+          if (
+            currentTextLength >= availableLength &&
+            currentPosition < text.length
+          ) {
             // Close all open tags
-            currentChunk += getCloseTags(ancestors);
+            currentChunk += ancestors
+              .slice()
+              .reverse()
+              .map(getCloseTag)
+              .join('');
 
-            if (currentChunk.trim()) {
+            if (hasTextContent && currentChunk.trim()) {
+              // Add the chunk
               chunks.push(rootTemplateMinimized(currentChunk));
             }
 
+            // Reset for new chunk
             currentChunk = '';
-            currentLength = 0;
+            currentTextLength = 0;
+            hasTextContent = false;
 
             // Reopen ancestor tags for the next chunk
-            currentChunk += getOpenTags(ancestors);
-            currentLength += currentChunk.length;
+            currentChunk += ancestors.map(getOpenTag).join('');
           }
         }
       }
     };
 
-    Array.from(rootElement.childNodes).forEach((node) => processNode(node, []));
+    // Start processing with root element
+    currentChunk += getOpenTag(rootElement);
 
-    if (currentLength > 0) {
-      currentChunk += getCloseTags([]);
+    Array.from(rootElement.childNodes).forEach((node) =>
+      processNode(node, [rootElement]),
+    );
+
+    // Close any remaining tags and add the last chunk if it has content
+    currentChunk += getCloseTag(rootElement);
+    if (hasTextContent && currentChunk.trim()) {
       chunks.push(rootTemplateMinimized(currentChunk));
     }
 

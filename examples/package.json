@@ -1,0 +1,83 @@
+{
+  "name": "cloud-text-to-speech-examples",
+  "description": "Examples for Cloud Text-to-Speech Universal Interface",
+  "version": "1.0.0",
+  "author": "Marko Kostich",
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markokosticdev/cloud_text_to_speech_nodejs.git",
+    "directory": "examples"
+  },
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">= 20.9 < 21"
+  },
+  "dependencies": {
+    "cloud-text-to-speech": "file:../",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.0",
+    "typescript": "^5.3.0"
+  },
+  "scripts": {
+    "setup": "npm install && npm run copy-env",
+    "copy-env": "cp .env-example .env 2>/dev/null || echo 'Please copy .env.example to .env and configure your API keys'",
+    "compile": "tsc",
+    "compile:watch": "tsc --watch",
+    
+    "basic:amazon": "npx ts-node src/basic/amazon.ts",
+    "basic:google": "npx ts-node src/basic/google.ts", 
+    "basic:microsoft": "npx ts-node src/basic/microsoft.ts",
+    "basic:all": "npm run basic:amazon && npm run basic:google && npm run basic:microsoft",
+    
+    "universal:start": "npx ts-node src/universal/getting-started.ts",
+    "universal:single": "npx ts-node src/universal/single-provider.ts",
+    "universal:combined": "npx ts-node src/universal/combined-providers.ts",
+    "universal:multi": "npx ts-node src/universal/multi-provider.ts",
+    "universal:ssml": "npx ts-node src/universal/ssml-processing.ts",
+    "universal:errors": "npx ts-node src/universal/error-handling.ts",
+    "universal:all": "npm run universal:start && npm run universal:multi && npm run universal:ssml && npm run universal:errors",
+    
+    "advanced:amazon": "npx ts-node src/advanced/amazon-detailed.ts",
+    "advanced:google": "npx ts-node src/advanced/google-detailed.ts",
+    "advanced:microsoft": "npx ts-node src/advanced/microsoft-detailed.ts",
+    "advanced:universal-single": "npx ts-node src/advanced/universal-single-detailed.ts",
+    "advanced:universal-combined": "npx ts-node src/advanced/universal-combined-detailed.ts",
+    "advanced:all": "npm run advanced:amazon && npm run advanced:google && npm run advanced:microsoft",
+    
+    "demo": "npm run universal:start",
+    "demo:all": "npm run universal:all",
+    "demo:basic": "npm run basic:all",
+    "demo:advanced": "npm run advanced:all",
+    
+    "build": "npm run build --prefix ../",
+    "build:examples": "npm run compile",
+    "test:examples": "npm run universal:all",
+    
+    "clean": "rm -f src/basic/*.mp3 src/basic/*.wav src/universal/*.mp3 src/universal/*.wav src/advanced/*.mp3 src/advanced/*.wav",
+    "clean:build": "rm -rf dist",
+    "clean:all": "npm run clean && npm run clean:build",
+    "validate-env": "node -e \"require('dotenv').config(); const required=['GOOGLE_API_KEY','MICROSOFT_TTS_SUBSCRIPTION_KEY','AMAZON_TTS_KEY_ID']; const missing=required.filter(k=>!process.env[k]); if(missing.length) { console.log('Missing:', missing.join(', ')); process.exit(1); } console.log('✅ Environment validated');\""
+  },
+  "volta": {
+    "node": "20.12.2"
+  },
+  "keywords": [
+    "text-to-speech",
+    "tts",
+    "google-tts",
+    "microsoft-tts", 
+    "amazon-polly",
+    "universal-interface",
+    "ssml",
+    "speech-synthesis",
+    "google-cloud",
+    "azure",
+    "aws",
+    "multi-provider"
+  ]
+}

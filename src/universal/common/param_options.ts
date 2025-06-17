@@ -12,8 +12,20 @@ export class ParamOptionsUniversal<G, M, A> {
     microsoft?: M;
     amazon?: A;
   } = {}) {
-    this.google = google;
-    this.microsoft = microsoft;
-    this.amazon = amazon;
+    this.google = google ?? this.defaultGoogle();
+    this.microsoft = microsoft ?? this.defaultMicrosoft();
+    this.amazon = amazon ?? this.defaultAmazon();
+  }
+
+  protected defaultGoogle(): G | undefined {
+    return undefined;
+  }
+
+  protected defaultMicrosoft(): M | undefined {
+    return undefined;
+  }
+
+  protected defaultAmazon(): A | undefined {
+    return undefined;
   }
 }

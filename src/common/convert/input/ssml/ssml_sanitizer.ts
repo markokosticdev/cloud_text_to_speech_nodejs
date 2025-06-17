@@ -7,23 +7,34 @@ export class SsmlSanitizer {
     ssml: string,
     allowedElements: { [key: string]: string[] },
   ): string {
-    if (!ssml.trim().startsWith('<speak>')) {
-      ssml = `<speak>${ssml}</speak>`;
+    // Handle empty input
+    if (!ssml || ssml.trim() === '') {
+      return '';
     }
 
-    const document = new DOMParser().parseFromString(ssml, 'text/xml');
+    // Track if the original input had a speak wrapper
+    const originalHadSpeakWrapper = ssml.trim().startsWith('<speak>') || ssml.trim().startsWith('<speak ');
+    
+    // Ensure we have a speak wrapper for processing
+    let processingSsml = ssml;
+    if (!originalHadSpeakWrapper) {
+      processingSsml = `<speak>${ssml}</speak>`;
+    }
+
+    const document = new DOMParser().parseFromString(processingSsml, 'text/xml');
     const rootElement = document.documentElement;
     const serializer = new XMLSerializer();
 
     SsmlSanitizer._sanitizeNode(rootElement, allowedElements);
 
-    if (!Object.prototype.hasOwnProperty.call(allowedElements, 'speak')) {
-      return Array.from(rootElement.childNodes)
-        .map((child) => serializer.serializeToString(child))
-        .join('');
-    } else {
-      return serializer.serializeToString(document);
-    }
+    // Always return inner content without speak wrapper
+    // This is the correct behavior for the processing pipeline in SsmlBase
+    const childContent = Array.from(rootElement.childNodes)
+      .map((child) => serializer.serializeToString(child))
+      .join('');
+    
+    // Return empty string if no meaningful content
+    return childContent.trim() === '' ? '' : childContent;
   }
 
   private static _sanitizeNode(
@@ -33,29 +44,36 @@ export class SsmlSanitizer {
     if (node.nodeType === node.ELEMENT_NODE) {
       const element = node as Element;
 
+      // First, recursively sanitize child nodes
       Array.from(element.childNodes).forEach((child) => {
         SsmlSanitizer._sanitizeNode(child, allowedElements);
       });
 
+      // Check if this element is allowed
       if (
         !Object.prototype.hasOwnProperty.call(allowedElements, element.nodeName)
       ) {
+        // Element not allowed - replace with its content
         const parent = element.parentNode;
-        const children = Array.from(element.childNodes).map((node) =>
-          node.cloneNode(true),
-        );
-        const nextSibling: Node = element.nextSibling;
-        parent.removeChild(element);
-        children.forEach((child) => {
-          if (nextSibling) {
-            parent.insertBefore(child, nextSibling);
-          } else {
-            if (child.nodeType == node.TEXT_NODE) {
-              parent.appendChild(child);
+        if (parent) {
+          const children = Array.from(element.childNodes);
+          const nextSibling = element.nextSibling;
+          
+          // Remove the element first
+          parent.removeChild(element);
+          
+          // Insert children in place
+          children.forEach((child) => {
+            const clonedChild = child.cloneNode(true);
+            if (nextSibling) {
+              parent.insertBefore(clonedChild, nextSibling);
+            } else {
+              parent.appendChild(clonedChild);
             }
-          }
-        });
+          });
+        }
       } else {
+        // Element is allowed - clean up attributes
         const allowedAttributes = allowedElements[element.nodeName] || [];
         Array.from(element.attributes).forEach((attribute) => {
           if (!allowedAttributes.includes(attribute.name)) {
@@ -65,8 +83,13 @@ export class SsmlSanitizer {
       }
     } else if (node.nodeType === node.TEXT_NODE) {
       const text = node as Text;
-      if (text.data.trim() === '') {
-        node.parentNode.removeChild(node);
+      // Only remove completely empty text nodes (whitespace-only), 
+      // but preserve meaningful whitespace
+      if (text.data.trim() === '' && text.data.length > 1) {
+        const parent = node.parentNode;
+        if (parent) {
+          parent.removeChild(node);
+        }
       }
     }
   }

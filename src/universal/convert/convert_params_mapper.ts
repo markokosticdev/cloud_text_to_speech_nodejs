@@ -18,7 +18,6 @@ export class ConvertParamsMapper {
   ): ConvertParamsGoogle {
     return new ConvertParamsGoogle({
       voice: new VoiceGoogle({
-        provider: universalParams.voice.provider,
         engines: universalParams.voice.engines,
         code: universalParams.voice.code,
         name: universalParams.voice.name,
@@ -47,7 +46,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.google,
       textOptions: universalParams.textOptions.google,
-      httpProxy: universalParams.httpProxy.google,
+      httpProxy: universalParams.httpProxy?.google,
     });
   }
 
@@ -56,7 +55,6 @@ export class ConvertParamsMapper {
   ): ConvertParamsMicrosoft {
     return new ConvertParamsMicrosoft({
       voice: new VoiceMicrosoft({
-        provider: universalParams.voice.provider,
         engines: universalParams.voice.engines,
         code: universalParams.voice.code,
         name: universalParams.voice.name,
@@ -85,7 +83,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.microsoft,
       textOptions: universalParams.textOptions.microsoft,
-      httpProxy: universalParams.httpProxy.microsoft,
+      httpProxy: universalParams.httpProxy?.microsoft,
     });
   }
 
@@ -94,7 +92,6 @@ export class ConvertParamsMapper {
   ): ConvertParamsAmazon {
     return new ConvertParamsAmazon({
       voice: new VoiceAmazon({
-        provider: universalParams.voice.provider,
         engines: universalParams.voice.engines,
         code: universalParams.voice.code,
         name: universalParams.voice.name,
@@ -123,7 +120,7 @@ export class ConvertParamsMapper {
       }),
       ssmlOptions: universalParams.ssmlOptions.amazon,
       textOptions: universalParams.textOptions.amazon,
-      httpProxy: universalParams.httpProxy.amazon,
+      httpProxy: universalParams.httpProxy?.amazon,
     });
   }
 }

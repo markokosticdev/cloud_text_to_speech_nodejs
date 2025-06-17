@@ -8,7 +8,19 @@ export class VoicesNameOptionsUniversal extends ParamOptionsUniversal<
   VoicesNameOptionsGoogle,
   VoicesNameOptionsMicrosoft,
   VoicesNameOptionsAmazon
-> {}
+> {
+  protected defaultGoogle(): VoicesNameOptionsGoogle | undefined {
+    return new VoicesNameOptionsGoogle();
+  }
+
+  protected defaultMicrosoft(): VoicesNameOptionsMicrosoft | undefined {
+    return new VoicesNameOptionsMicrosoft();
+  }
+
+  protected defaultAmazon(): VoicesNameOptionsAmazon | undefined {
+    return new VoicesNameOptionsAmazon();
+  }
+}
 
 export class HttpProxyMapperOptionsUniversal extends ParamOptionsUniversal<
   HttpProxyMapperBase,

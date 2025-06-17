@@ -30,8 +30,8 @@ export class VoicesClientAmazon extends HttpClientBase {
     });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    this.client.interceptors.request.use(interceptor);
+
+    this.client.interceptors.request.use(interceptor as any);
 
     return await this.client.request(requestConfig);
   }

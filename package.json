@@ -1,7 +1,9 @@
 {
   "name": "cloud-text-to-speech",
-  "description": "Single interface to Google, Microsoft and Amazon Text-To-Speech.",
-  "version": "1.0.3",
+  "description": "Universal Text-to-Speech interface with multi-provider support for Google Cloud, Microsoft Azure, and Amazon Polly",
+  "version": "3.0.0",
+  "author": "Marko Kostich",
+  "license": "BSD-2-Clause",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/markokosticdev/cloud_text_to_speech_nodejs.git"
@@ -37,7 +39,6 @@
     "typescript": "~5.6"
   },
   "scripts": {
-    "run-example": "node build/examples/${npm_config_file}.js",
     "start": "node build/src/main.js",
     "clean": "rimraf coverage build tmp",
     "prebuild": "npm run lint",
@@ -57,12 +58,18 @@
   "files": [
     "build/src/**/*"
   ],
-  "license": "BSD 2-Clause License",
   "keywords": [
-    "tts",
     "text-to-speech",
+    "tts",
+    "google-tts",
+    "microsoft-tts", 
+    "amazon-polly",
+    "universal-interface",
+    "ssml",
+    "speech-synthesis",
     "google-cloud",
     "azure",
-    "aws"
+    "aws",
+    "multi-provider"
   ]
 }

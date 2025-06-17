@@ -1,4 +1,4 @@
-import { VoiceUniversal } from '../voices/voice_model.js';
+import { VoiceUniversal } from '../voices/voices_model.js';
 import { ConvertAudioOptionsUniversal } from './convert_audio_options.js';
 import { ConvertProcessOptionsUniversal } from './convert_process_options.js';
 import { PITCH, RATE } from './convert_params_defaults.js';
@@ -26,7 +26,7 @@ export class ConvertParamsUniversal {
   processOptions: ConvertProcessOptionsUniversal;
   ssmlOptions: ConvertSsmlOptionsUniversal;
   textOptions: ConvertTextOptionsUniversal;
-  httpProxy: HttpProxyMapperOptionsUniversal;
+  httpProxy: HttpProxyMapperOptionsUniversal | undefined;
 
   constructor({
     voice,

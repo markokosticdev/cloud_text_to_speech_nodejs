@@ -16,7 +16,7 @@ export class VoicesParamsUniversal {
   }: {
     nameOptions?: VoicesNameOptionsUniversal;
     httpProxy?: HttpProxyMapperOptionsUniversal;
-  }) {
+  } = {}) {
     this.nameOptions =
       nameOptions ??
       new VoicesNameOptionsUniversal({
