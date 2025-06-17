@@ -2,6 +2,12 @@ export * from './common/tts/tts_providers.js';
 export * from './common/locale/locale_model.js';
 export * from './common/http/http_proxy_base.js';
 
+export * from './common/errors/tts_error.js';
+export * from './common/errors/retry_handler.js';
+export * from './common/http/http_rate_limiter.js';
+export * from './common/http/http_interceptors.js';
+export * from './common/cache/cache_manager.js';
+
 export * from './google/common/common.js';
 export * from './google/voices/voices.js';
 export * from './google/convert/audio/audio.js';

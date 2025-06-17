@@ -1,7 +1,7 @@
 import { VoiceLocale } from '../../common/locale/locale_model.js';
 import { TtsProviders } from '../../common/tts/tts_providers.js';
 import { VoiceLocaleHelpers } from '../../common/locale/locale_helpers.js';
-import { VoiceBase } from '../../common/voices/voices_base.js';
+import { VoiceBase, VoiceFilterOptions } from '../../common/voices/voices_base.js';
 
 export class VoiceMicrosoft extends VoiceBase {
   sampleRateHertz?: string;
@@ -45,6 +45,94 @@ export class VoiceMicrosoft extends VoiceBase {
     this.styleList = styleList;
     this.status = status;
     this.wordsPerMinute = wordsPerMinute;
+  }
+
+  /**
+   * Override to provide Microsoft-specific sample rate
+   */
+  protected getSampleRate(): number | undefined {
+    if (this.sampleRateHertz) {
+      return parseInt(this.sampleRateHertz, 10);
+    }
+    return undefined;
+  }
+
+  /**
+   * Override to add Microsoft-specific filtering
+   */
+  matchesFilter(filter: VoiceFilterOptions): boolean {
+    // Call base filtering first
+    if (!super.matchesFilter(filter)) {
+      return false;
+    }
+
+    // Microsoft-specific sample rate filtering
+    if (filter.minSampleRate || filter.maxSampleRate) {
+      const sampleRate = this.getSampleRate();
+      if (sampleRate) {
+        if (filter.minSampleRate && sampleRate < filter.minSampleRate) {
+          return false;
+        }
+        if (filter.maxSampleRate && sampleRate > filter.maxSampleRate) {
+          return false;
+        }
+      }
+    }
+
+    // Style filtering
+    if (filter.styles && filter.styles.length > 0 && this.styleList) {
+      const hasMatchingStyle = this.styleList.some(style =>
+        filter.styles!.map(s => s.toLowerCase()).includes(style.toLowerCase())
+      );
+      if (!hasMatchingStyle) {
+        return false;
+      }
+    }
+
+    // Status filtering
+    if (filter.status && filter.status.length > 0 && this.status) {
+      if (!filter.status.map(s => s.toLowerCase()).includes(this.status.toLowerCase())) {
+        return false;
+      }
+    }
+
+    // Words per minute filtering
+    if (filter.wordsPerMinuteRange && this.wordsPerMinute) {
+      const wpm = parseInt(this.wordsPerMinute, 10);
+      if (filter.wordsPerMinuteRange.min && wpm < filter.wordsPerMinuteRange.min) {
+        return false;
+      }
+      if (filter.wordsPerMinuteRange.max && wpm > filter.wordsPerMinuteRange.max) {
+        return false;
+      }
+    }
+
+    // Neural/Premium filtering for Microsoft
+    if (filter.neural !== undefined) {
+      const isNeural = this.engines.some(e => 
+        e.toLowerCase().includes('neural') || 
+        e.toLowerCase().includes('premium')
+      );
+      if (filter.neural !== isNeural) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  /**
+   * Get available styles for this voice
+   */
+  getAvailableStyles(): string[] {
+    return this.styleList || [];
+  }
+
+  /**
+   * Get words per minute as number
+   */
+  getWordsPerMinute(): number | undefined {
+    return this.wordsPerMinute ? parseInt(this.wordsPerMinute, 10) : undefined;
   }
 
   static fromJson(json: never): VoiceMicrosoft {

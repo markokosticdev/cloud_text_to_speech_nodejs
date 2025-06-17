@@ -1,7 +1,7 @@
 import { VoiceLocale } from '../../common/locale/locale_model.js';
 import { TtsProviders } from '../../common/tts/tts_providers.js';
 import { VoiceLocaleHelpers } from '../../common/locale/locale_helpers.js';
-import { VoiceBase } from '../../common/voices/voices_base.js';
+import { VoiceBase, VoiceFilterOptions } from '../../common/voices/voices_base.js';
 
 export class VoiceGoogle extends VoiceBase {
   sampleRateHertz?: string;
@@ -35,6 +35,53 @@ export class VoiceGoogle extends VoiceBase {
     this.sampleRateHertz = sampleRateHertz;
   }
 
+  /**
+   * Override to provide Google-specific sample rate
+   */
+  protected getSampleRate(): number | undefined {
+    if (this.sampleRateHertz) {
+      return parseInt(this.sampleRateHertz, 10);
+    }
+    return undefined;
+  }
+
+  /**
+   * Override to add Google-specific filtering
+   */
+  matchesFilter(filter: VoiceFilterOptions): boolean {
+    // Call base filtering first
+    if (!super.matchesFilter(filter)) {
+      return false;
+    }
+
+    // Google-specific sample rate filtering
+    if (filter.minSampleRate || filter.maxSampleRate) {
+      const sampleRate = this.getSampleRate();
+      if (sampleRate) {
+        if (filter.minSampleRate && sampleRate < filter.minSampleRate) {
+          return false;
+        }
+        if (filter.maxSampleRate && sampleRate > filter.maxSampleRate) {
+          return false;
+        }
+      }
+    }
+
+    // Neural/Premium filtering for Google
+    if (filter.neural !== undefined) {
+      const isNeural = this.engines.some(e => 
+        e.toLowerCase().includes('neural') || 
+        e.toLowerCase().includes('wavenet') ||
+        e.toLowerCase().includes('journey')
+      );
+      if (filter.neural !== isNeural) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   static fromJson(json: never): VoiceGoogle {
     const engines = this._toEngines(json['name']);
     const gender = this._toGender(json['ssmlGender']);
@@ -66,15 +113,14 @@ export class VoiceGoogle extends VoiceBase {
   }
 
   private static _toLocale(languageCodes: string[]): VoiceLocale {
-    if (languageCodes.length > 0) {
-      const localeSegments = languageCodes[0].split('-');
-      const localeObj = VoiceLocaleHelpers.segmentsToLocale(localeSegments);
-      return VoiceLocaleHelpers.localeToVoiceLocale(localeObj);
-    }
-    return new VoiceLocale({ code: '' });
+    const localeSegments = languageCodes[0].split('-');
+    const localeObj = VoiceLocaleHelpers.segmentsToLocale(localeSegments);
+    return VoiceLocaleHelpers.localeToVoiceLocale(localeObj);
   }
 
-  private static _toSampleRateHertz(naturalSampleRateHertz: number): string {
-    return naturalSampleRateHertz.toString();
+  private static _toSampleRateHertz(
+    naturalSampleRateHertz: number,
+  ): string | undefined {
+    return naturalSampleRateHertz ? naturalSampleRateHertz.toString() : undefined;
   }
 }

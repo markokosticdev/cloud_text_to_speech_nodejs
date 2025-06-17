@@ -13,15 +13,30 @@ export class VoicesNameOptionsGoogle extends NameOptions<VoiceGoogle> {
     maleNamesMapper,
     femaleNames,
     femaleNamesMapper,
+    neutralNames,
+    neutralNamesMapper,
   }: {
     maleNames?: string[];
     maleNamesMapper?: VoicesGoogleNameMapper;
     femaleNames?: string[];
     femaleNamesMapper?: VoicesGoogleNameMapper;
+    neutralNames?: string[];
+    neutralNamesMapper?: VoicesGoogleNameMapper;
   } = {}) {
     super(
-      { maleNames: VoiceNames.male, femaleNames: VoiceNames.female },
-      { maleNames, maleNamesMapper, femaleNames, femaleNamesMapper },
+      { 
+        maleNames: VoiceNames.male, 
+        femaleNames: VoiceNames.female,
+        neutralNames: VoiceNames.neutral
+      },
+      { 
+        maleNames, 
+        maleNamesMapper, 
+        femaleNames, 
+        femaleNamesMapper,
+        neutralNames,
+        neutralNamesMapper
+      },
     );
   }
 }

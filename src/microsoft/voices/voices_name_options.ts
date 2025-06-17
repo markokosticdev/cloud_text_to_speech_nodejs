@@ -12,12 +12,26 @@ export class VoicesNameOptionsMicrosoft extends NameOptions<VoiceMicrosoft> {
     maleNamesMapper,
     femaleNames,
     femaleNamesMapper,
+    neutralNames,
+    neutralNamesMapper,
   }: {
     maleNames?: string[];
     maleNamesMapper?: VoicesMicrosoftNameMapper;
     femaleNames?: string[];
     femaleNamesMapper?: VoicesMicrosoftNameMapper;
+    neutralNames?: string[];
+    neutralNamesMapper?: VoicesMicrosoftNameMapper;
   } = {}) {
-    super({}, { maleNames, maleNamesMapper, femaleNames, femaleNamesMapper });
+    super(
+      {},
+      { 
+        maleNames, 
+        maleNamesMapper, 
+        femaleNames, 
+        femaleNamesMapper,
+        neutralNames,
+        neutralNamesMapper
+      }
+    );
   }
 }

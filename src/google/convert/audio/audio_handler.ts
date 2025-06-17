@@ -8,16 +8,19 @@ import { VoicesClientGoogle } from '../../voices/voices_client.js';
 import { AudioClientGoogle } from './audio_client.js';
 import { HttpResponseBase } from '../../../common/http/http_response_base.js';
 import { ConvertParamsGoogle } from '../convert_params.js';
-import { AudioHandler } from '../../../common/convert/audio/audio_handler.js';
+import { AudioHandler, ProcessingOptions } from '../../../common/convert/audio/audio_handler.js';
 import { AudioJoiner } from '../../../common/convert/audio/audio_joiner.js';
 import { TextGoogle } from '../input/text.js';
+import { HttpClientEnhancer } from '../../../common/http/http_interceptors.js';
 
 export class AudioHandlerGoogle {
   async getAudio(
     params: ConvertParamsGoogle,
     authHeader: AuthenticationHeaderGoogle,
   ): Promise<AudioSuccessGoogle> {
-    const client: AxiosInstance = axios.create();
+    // Create enhanced HTTP client with interceptors
+    const client: AxiosInstance = this.createEnhancedClient(params);
+    
     const audioClient: VoicesClientGoogle = new AudioClientGoogle(
       client,
       authHeader,
@@ -37,6 +40,29 @@ export class AudioHandlerGoogle {
     return new AudioSuccessGoogle(AudioJoiner.join(audios));
   }
 
+  private createEnhancedClient(params: ConvertParamsGoogle): AxiosInstance {
+    const client = axios.create();
+    
+    // Enhanced client with interceptors based on process options
+    return HttpClientEnhancer.enhance(client, 'google', {
+      rateLimiting: params.processOptions.getRateLimitConfig(),
+      rateLimitAlgorithm: params.processOptions.rateLimitOptions?.algorithm,
+      errorHandling: params.processOptions.isEnhancedErrorsEnabled(),
+      retry: params.processOptions.isRetryEnabled() ? params.processOptions.retryOptions : undefined
+    });
+  }
+
+  private createProcessingOptions(params: ConvertParamsGoogle): ProcessingOptions {
+    return {
+      enableEnhancedErrors: params.processOptions.isEnhancedErrorsEnabled(),
+      throwOnFirstError: params.processOptions.errorOptions?.throwOnFirstError,
+      collectErrors: params.processOptions.errorOptions?.collectErrors,
+      enableTiming: params.processOptions.monitoringOptions?.enableTiming,
+      onProgress: params.processOptions.monitoringOptions?.onProgress,
+      onItemComplete: params.processOptions.monitoringOptions?.onItemComplete
+    };
+  }
+
   private async processFromSsml(
     params: ConvertParamsGoogle,
     audioClient: VoicesClientGoogle,
@@ -52,6 +78,8 @@ export class AudioHandlerGoogle {
       options: params.ssmlOptions,
     });
 
+    const processingOptions = this.createProcessingOptions(params);
+
     if (params.processOptions.processAsync) {
       return await AudioHandler.handleAsync<AudioSuccessGoogle>(
         ssml.processedSsmlChunks(),
@@ -64,6 +92,7 @@ export class AudioHandlerGoogle {
           );
         },
         params.processOptions.processLimit,
+        processingOptions
       );
     } else {
       return await AudioHandler.handleSync<AudioSuccessGoogle>(
@@ -76,6 +105,7 @@ export class AudioHandlerGoogle {
             mapper,
           );
         },
+        processingOptions
       );
     }
   }
@@ -135,6 +165,8 @@ export class AudioHandlerGoogle {
       options: params.ssmlOptions,
     });
 
+    const processingOptions = this.createProcessingOptions(params);
+
     if (params.processOptions.processAsync) {
       return await AudioHandler.handleAsync<AudioSuccessGoogle>(
         text.processedTextChunks(),
@@ -147,6 +179,7 @@ export class AudioHandlerGoogle {
           );
         },
         params.processOptions.processLimit,
+        processingOptions
       );
     } else {
       return await AudioHandler.handleSync<AudioSuccessGoogle>(
@@ -159,6 +192,7 @@ export class AudioHandlerGoogle {
             mapper,
           );
         },
+        processingOptions
       );
     }
   }

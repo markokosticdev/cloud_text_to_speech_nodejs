@@ -47,6 +47,8 @@ export class Helpers {
       maleNames: string[];
       femaleIndex: number;
       femaleNames: string[];
+      neutralIndex: number;
+      neutralNames: string[];
     };
 
     const nameRecords: Record<string, NameRecord> = {};
@@ -62,6 +64,11 @@ export class Helpers {
           femaleIndex: 0,
           femaleNames: this.shuffleNamesByText(
             options.femaleNames ?? [],
+            locale,
+          ),
+          neutralIndex: 0,
+          neutralNames: this.shuffleNamesByText(
+            options.neutralNames ?? [],
             locale,
           ),
         };
@@ -85,8 +92,6 @@ export class Helpers {
           }
           break;
         case 'Female':
-        case 'Neutral':
-        default:
           if (nameRecord.femaleNames.length) {
             if (nameRecord.femaleIndex >= nameRecord.femaleNames.length) {
               nameRecord.femaleIndex = 0;
@@ -95,6 +100,33 @@ export class Helpers {
             nameRecord.femaleIndex++;
           } else if (options.femaleNamesMapper) {
             name = options.femaleNamesMapper(voices, index);
+          } else {
+            name = voice.name;
+          }
+          break;
+        case 'Neutral':
+          if (nameRecord.neutralNames.length) {
+            if (nameRecord.neutralIndex >= nameRecord.neutralNames.length) {
+              nameRecord.neutralIndex = 0;
+            }
+            name = nameRecord.neutralNames[nameRecord.neutralIndex];
+            nameRecord.neutralIndex++;
+          } else if (options.neutralNamesMapper) {
+            name = options.neutralNamesMapper(voices, index);
+          } else {
+            name = voice.name;
+          }
+          break;
+        default:
+          // For unknown genders, try neutral names first, then fallback
+          if (nameRecord.neutralNames.length) {
+            if (nameRecord.neutralIndex >= nameRecord.neutralNames.length) {
+              nameRecord.neutralIndex = 0;
+            }
+            name = nameRecord.neutralNames[nameRecord.neutralIndex];
+            nameRecord.neutralIndex++;
+          } else if (options.neutralNamesMapper) {
+            name = options.neutralNamesMapper(voices, index);
           } else {
             name = voice.name;
           }

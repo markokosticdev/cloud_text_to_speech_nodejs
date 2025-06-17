@@ -31,8 +31,8 @@ export class AudioClientAmazon extends HttpClientBase {
     });
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-
-    this.client.interceptors.request.use(interceptor as any);
+    // @ts-ignore - aws4Interceptor types are not fully compatible with axios interceptor types
+    this.client.interceptors.request.use(interceptor as unknown);
 
     return await this.client.request(requestConfig);
   }

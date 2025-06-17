@@ -96,7 +96,8 @@ examples/
         ├── google-detailed.ts    # Google with all options
         ├── microsoft-detailed.ts # Microsoft with all options
         ├── universal-single-detailed.ts    # Advanced single provider
-        └── universal-combined-detailed.ts  # Advanced combined providers
+        ├── universal-combined-detailed.ts  # Advanced combined providers
+        └── universal-enhanced-features.ts  # 🆕 Enhanced v3 features showcase
 ```
 
 ## 🎯 Available Examples
@@ -176,9 +177,10 @@ For power users who need full control:
 npm run advanced:amazon       # Amazon with all configuration options
 npm run advanced:google       # Google with all configuration options
 npm run advanced:microsoft    # Microsoft with all configuration options
-npm run advanced:universal-single    # Advanced single provider setup
-npm run advanced:universal-combined  # Advanced combined provider setup
-npm run advanced:all         # Run all advanced examples
+npm run advanced:universal-single    # Advanced single provider configuration
+npm run advanced:universal-combined  # Advanced combined providers setup
+npm run advanced:enhanced-features   # 🆕 Enhanced v3 features demonstration
+npm run advanced:all                 # Run all provider-specific advanced examples
 ```
 
 **Features:**
@@ -303,6 +305,38 @@ Explore advanced configurations for production deployments:
 npm run advanced:amazon  # Advanced Amazon setup
 npm run advanced:universal-combined  # Production-ready universal setup
 ```
+
+## 🆕 Enhanced v3 Features
+
+The `universal-enhanced-features.ts` example demonstrates the advanced capabilities introduced in v3.0.0:
+
+### 🛡️ Enhanced Error Handling
+- **Standardized Error Types**: Consistent error hierarchy across all providers
+- **Detailed Error Context**: Rich error information with provider details and retry suggestions
+- **User-Friendly Messages**: Localized error messages for better user experience
+
+### 🔄 Intelligent Retry Logic
+- **Exponential Backoff**: Smart delay calculation with jitter to prevent thundering herd
+- **Circuit Breaker Pattern**: Automatic failure detection to prevent cascading failures
+- **Configurable Strategies**: Multiple retry configurations for different scenarios
+
+### 🚦 Advanced Rate Limiting
+- **Multiple Algorithms**: Token bucket and sliding window rate limiting
+- **Provider-Specific Limits**: Pre-configured limits for Google, Microsoft, and Amazon
+- **Burst Handling**: Intelligent handling of traffic spikes
+
+### 📦 Sophisticated Batch Processing
+- **Concurrency Control**: Configurable parallel processing with semaphore control
+- **Progress Monitoring**: Real-time progress tracking and completion callbacks
+- **Automatic Retry**: Individual item retry with comprehensive error handling
+- **Chunked Processing**: Process large batches in smaller chunks with delays
+
+Run the enhanced features demo:
+```bash
+npm run advanced:enhanced-features
+```
+
+## 🎯 Learning Path
 
 ## 🐛 Troubleshooting
 

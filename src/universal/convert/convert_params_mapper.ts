@@ -43,6 +43,10 @@ export class ConvertParamsMapper {
       processOptions: new ConvertProcessOptionsGoogle({
         processAsync: universalParams.processOptions.processAsync,
         processLimit: universalParams.processOptions.processLimit,
+        retryOptions: universalParams.processOptions.retryOptions,
+        errorOptions: universalParams.processOptions.errorOptions,
+        rateLimitOptions: universalParams.processOptions.rateLimitOptions,
+        monitoringOptions: universalParams.processOptions.monitoringOptions,
       }),
       ssmlOptions: universalParams.ssmlOptions.google,
       textOptions: universalParams.textOptions.google,
@@ -80,6 +84,10 @@ export class ConvertParamsMapper {
       processOptions: new ConvertProcessOptionsMicrosoft({
         processAsync: universalParams.processOptions.processAsync,
         processLimit: universalParams.processOptions.processLimit,
+        retryOptions: universalParams.processOptions.retryOptions,
+        errorOptions: universalParams.processOptions.errorOptions,
+        rateLimitOptions: universalParams.processOptions.rateLimitOptions,
+        monitoringOptions: universalParams.processOptions.monitoringOptions,
       }),
       ssmlOptions: universalParams.ssmlOptions.microsoft,
       textOptions: universalParams.textOptions.microsoft,
@@ -117,6 +125,10 @@ export class ConvertParamsMapper {
       processOptions: new ConvertProcessOptionsAmazon({
         processAsync: universalParams.processOptions.processAsync,
         processLimit: universalParams.processOptions.processLimit,
+        retryOptions: universalParams.processOptions.retryOptions,
+        errorOptions: universalParams.processOptions.errorOptions,
+        rateLimitOptions: universalParams.processOptions.rateLimitOptions,
+        monitoringOptions: universalParams.processOptions.monitoringOptions,
       }),
       ssmlOptions: universalParams.ssmlOptions.amazon,
       textOptions: universalParams.textOptions.amazon,

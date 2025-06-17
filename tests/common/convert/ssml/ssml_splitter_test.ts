@@ -164,25 +164,24 @@ describe('SsmlSplitter Tests', () => {
   });
 
   describe('Edge Cases and Error Handling', () => {
-    test('should handle very short split limits gracefully', () => {
+    test('should handle very short split limits - success case', () => {
       const ssml = SampleSsmlContent.SIMPLE_TEXT;
-      const options = createMockGoogleSsmlOptions({ splitLimit: 100 });
+      const options = createMockGoogleSsmlOptions({ splitLimit: 1000 });
 
-      // Should either work or throw a descriptive error
-      let result: string[] = [];
-      let threwError = false;
-      try {
-        result = SsmlSplitter.split(ssml, mockGoogleRootTemplate, options);
-      } catch (error) {
-        threwError = true;
-        expect(error.message).not.toMatch(/unexpected/i);
-      }
+      const result = SsmlSplitter.split(ssml, mockGoogleRootTemplate, options);
+      expect(result).toBeDefined();
+      result.forEach((chunk) => {
+        expect(chunk.length).toBeLessThanOrEqual(options.splitLimit);
+      });
+    });
 
-      if (!threwError && result.length > 0) {
-        result.forEach((chunk) => {
-          expect(chunk.length).toBeLessThanOrEqual(options.splitLimit);
-        });
-      }
+    test('should handle very short split limits - error case', () => {
+      const ssml = SampleSsmlContent.SIMPLE_TEXT;
+      const options = createMockGoogleSsmlOptions({ splitLimit: 50 });
+
+      expect(() => {
+        SsmlSplitter.split(ssml, mockGoogleRootTemplate, options);
+      }).toThrow();
     });
 
     test('should preserve SSML structure in all chunks', () => {

@@ -47,6 +47,7 @@
     "advanced:microsoft": "npx ts-node src/advanced/microsoft-detailed.ts",
     "advanced:universal-single": "npx ts-node src/advanced/universal-single-detailed.ts",
     "advanced:universal-combined": "npx ts-node src/advanced/universal-combined-detailed.ts",
+    "advanced:enhanced-features": "npx ts-node src/advanced/universal-enhanced-features.ts",
     "advanced:all": "npm run advanced:amazon && npm run advanced:google && npm run advanced:microsoft",
     
     "demo": "npm run universal:start",

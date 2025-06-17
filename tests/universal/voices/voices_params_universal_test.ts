@@ -648,7 +648,7 @@ describe('VoicesParamsUniversal Tests', () => {
     test('should handle invalid name option configurations gracefully', () => {
       const nameOptions = new VoicesNameOptionsUniversal({
         google: new VoicesNameOptionsGoogle({
-          maleNames: null as any,  // Invalid configuration
+          maleNames: undefined,  // Invalid configuration
           femaleNames: [],
         }),
       });
