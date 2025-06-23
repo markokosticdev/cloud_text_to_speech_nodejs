@@ -1,0 +1,67 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Cloud Text-to-Speech API Documentation",
+  "entryPoints": ["./src/main.ts"],
+  "entryPointStrategy": "expand",
+  "out": "./docs/docs-html",
+  "exclude": [
+    "**/node_modules/**",
+    "**/build/**",
+    "**/tests/**"
+  ],
+  "theme": "typedoc-github-theme",
+  "plugin": ["typedoc-github-theme"],
+  "readme": "./README.md",
+  "includeVersion": true,
+  "excludePrivate": false,
+  "excludeProtected": false,
+  "excludeInternal": false,
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Universal API",
+    "Google Cloud TTS",
+    "Microsoft Azure TTS", 
+    "Amazon Polly TTS",
+    "Common Utilities",
+    "Error Handling",
+    "Audio Processing",
+    "Voice Management",
+    "Configuration",
+    "*"
+  ],
+  "sort": ["source-order"],
+  "kindSortOrder": [
+    "Class",
+    "Interface",
+    "TypeAlias",
+    "Function",
+    "Method",
+    "Property"
+  ],
+  "skipErrorChecking": true,
+  "validation": {
+    "notExported": false,
+    "invalidLink": false,
+    "notDocumented": false
+  },
+  "treatWarningsAsErrors": false,
+  "logLevel": "Info",
+  "excludeExternals": true,
+  "includeHierarchySummary": true,
+  "searchInComments": true,
+  "cleanOutputDir": true,
+  "navigationLinks": {
+    "GitHub": "https://github.com/markokosticdev/cloud_text_to_speech_nodejs",
+    "NPM": "https://www.npmjs.com/package/cloud-text-to-speech",
+    "Changelog": "https://github.com/markokosticdev/cloud_text_to_speech_nodejs/blob/main/CHANGELOG.md"
+  },
+  "sidebarLinks": {
+    "Migration Guide": "https://github.com/markokosticdev/cloud_text_to_speech_nodejs/blob/main/MIGRATION_v3.md",
+    "Examples": "https://github.com/markokosticdev/cloud_text_to_speech_nodejs/tree/main/examples"
+  },
+  "hideGenerator": false,
+  "gitRevision": "main",
+  "githubPages": true,
+  "sourceLinkTemplate": "https://github.com/markokosticdev/cloud_text_to_speech_nodejs/blob/{gitRevision}/{path}#L{line}"
+} 

@@ -1,4 +1,4 @@
-# Cloud Text-To-Speech v3 - Universal TTS Interface
+# Cloud Text-To-Speech - Universal TTS Interface
 
 [![Npm Version](https://img.shields.io/npm/v/cloud-text-to-speech.svg?logo=npm)](https://www.npmjs.com/package/cloud-text-to-speech)
 [![Npm Downloads Total](https://img.shields.io/npm/dt/cloud-text-to-speech.svg?logo=npm)](https://www.npmjs.com/package/cloud-text-to-speech)
@@ -41,7 +41,7 @@ console.log(`Found ${voices.voices.length} voices across all providers`);
 const voice = voices.voices.find(v => v.locale.code === 'en-US');
 const convertParams = new ConvertParamsUniversal({
   voice: voice,
-  text: 'Hello from Cloud Text-to-Speech v3!',
+  text: 'Hello from Cloud Text-to-Speech!',
   audioOptions: new ConvertAudioOptionsUniversal({
     audioFormat: AudioOutputFormatUniversal.mp3_128k
   })
@@ -460,7 +460,7 @@ npm run prettier
 ### Documentation
 - **[CHANGELOG.md](./CHANGELOG.md)**: Complete list of changes in v3.0.0
 - **[MIGRATION_v3.md](./MIGRATION_v3.md)**: Detailed migration guide from v1/v2
-- **[Examples](./examples/v3/)**: Advanced examples and use cases
+- **[Examples](./examples/)**: Advanced examples and use cases
 
 ### Community and Support
 - **[GitHub Issues](https://github.com/markokosticdev/cloud_text_to_speech_nodejs/issues)**: Bug reports and questions

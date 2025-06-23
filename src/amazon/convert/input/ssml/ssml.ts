@@ -1,6 +1,6 @@
-import { ConvertSsmlOptionsAmazon } from '../convert_ssml_options.js';
-import { SsmlBase } from '../../../common/convert/input/ssml/ssml_base.js';
-import { VoiceAmazon } from '../../voices/voices_model.js';
+import { ConvertSsmlOptionsAmazon } from '../../convert_ssml_options.js';
+import { SsmlBase } from '../../../../common/convert/input/ssml/ssml_base.js';
+import { VoiceAmazon } from '../../../voices/voices_model.js';
 
 export class SsmlAmazon extends SsmlBase<
   VoiceAmazon,

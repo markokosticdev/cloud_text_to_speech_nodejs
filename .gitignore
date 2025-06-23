@@ -30,3 +30,8 @@ build/
 
 # Environment variables
 .env
+
+# Documentation
+docs-html/
+docs-md/
+*.tgz

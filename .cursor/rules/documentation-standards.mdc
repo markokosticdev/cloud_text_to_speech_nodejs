@@ -1,0 +1,811 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# TypeDoc Documentation Standards for Cloud Text-to-Speech
+
+This rule defines the comprehensive TypeDoc documentation standards for all TypeScript code in the Cloud Text-to-Speech project.
+
+## 🚨 MANDATORY TYPEDOC POLICY
+
+**TypeDoc documentation MUST be created or updated every time code is written or modified.** Documentation is not optional - it is a required part of the development process that directly impacts the generated API documentation website.
+
+### ⚠️ CRITICAL RULE: NO LOGIC CHANGES DURING DOCUMENTATION
+
+**NEVER change the existing logic or functionality when adding or updating documentation.** The sole purpose of documentation tasks is to improve code clarity and API documentation without modifying behavior.
+
+**Absolutely prohibited during documentation work:**
+- ❌ Changing method implementations or algorithms
+- ❌ Modifying function parameters or return types
+- ❌ Altering class constructors or property assignments
+- ❌ Adding new features or functionality
+- ❌ Fixing bugs or performance issues
+- ❌ Refactoring existing code structure
+- ❌ Changing error handling logic
+- ❌ Modifying variable names or types
+
+**Only allowed during documentation work:**
+- ✅ Adding TypeDoc comments to classes, methods, and interfaces
+- ✅ Adding inline comments to explain complex logic
+- ✅ Updating existing comments to match current implementation
+- ✅ Adding `@example` code blocks in documentation
+- ✅ Adding proper `@category`, `@param`, `@returns`, and `@throws` tags
+- ✅ Improving comment formatting and readability
+
+**Documentation work must be purely additive and descriptive - the code's behavior must remain exactly the same before and after documentation updates.**
+
+### When TypeDoc Documentation Must Be Updated:
+- ✅ **Creating new classes** - Add complete class-level TypeDoc comments with categories
+- ✅ **Adding new methods/functions** - Add comprehensive method documentation with proper tags
+- ✅ **Modifying existing methods** - Update TypeDoc comments to reflect changes
+- ✅ **Changing method signatures** - Update parameter and return type documentation
+- ✅ **Adding new interfaces/types** - Document purpose and usage with TypeDoc-specific tags
+- ✅ **Refactoring code logic** - Update inline comments to match new implementation
+- ✅ **Fixing bugs** - Add comments explaining the fix and prevention
+- ✅ **Adding error handling** - Document new error conditions with `@throws` tags
+- ✅ **Performance optimizations** - Comment on the optimization and expected impact
+- ✅ **Security changes** - Document security considerations and implications
+
+### TypeDoc-First Development:
+1. **Write TypeDoc comments before implementation** - Design your API through documentation
+2. **Use TypeDoc categories and modules** - Organize documentation for better navigation
+3. **Include working examples** - All `@example` tags must contain runnable code
+4. **Review generated docs** - Check the actual HTML output, not just the comments
+5. **Test documentation examples** - Ensure code examples actually work
+
+## TypeDoc Categories and Organization
+
+### Module Categories
+Use TypeDoc's `@category` tag to organize classes and functions:
+
+```typescript
+/**
+ * Universal Text-to-Speech interface supporting multiple cloud providers
+ * 
+ * @category Universal API
+ */
+export class TtsUniversal {
+}
+
+/**
+ * Google Cloud Text-to-Speech implementation
+ * 
+ * @category Google Cloud TTS
+ */
+export class TtsGoogle {
+}
+
+/**
+ * Error handling utilities for TTS operations
+ * 
+ * @category Error Handling
+ */
+export class TtsError extends Error {
+}
+```
+
+### Supported Categories (Must match typedoc.json configuration):
+- `Universal API` - Universal/cross-provider interfaces
+- `Google Cloud TTS` - Google-specific implementations
+- `Microsoft Azure TTS` - Microsoft-specific implementations  
+- `Amazon Polly TTS` - Amazon-specific implementations
+- `Common Utilities` - Shared utility functions and helpers
+- `Error Handling` - Error classes and handling utilities
+- `Audio Processing` - Audio format and streaming utilities
+- `Voice Management` - Voice selection and metadata
+- `Configuration` - Configuration and initialization utilities
+
+## Class Documentation Standards
+
+### 🔄 Update Trigger: EVERY time a class is created, modified, or refactored
+
+### Class Header Template
+All classes must have TypeDoc comments with proper categorization:
+
+```typescript
+/**
+ * [Brief one-line description of the class purpose]
+ * 
+ * [Detailed description explaining what the class does, its main responsibilities,
+ * and any important implementation details or design patterns used]
+ * 
+ * @example Basic Usage
+ * ```typescript
+ * // Initialize the service
+ * const tts = new ClassName(options);
+ * 
+ * // Perform operation
+ * const result = await tts.method();
+ * console.log(result);
+ * ```
+ * 
+ * @example Advanced Usage with Error Handling
+ * ```typescript
+ * try {
+ *   const instance = new ClassName({
+ *     provider: 'google',
+ *     apiKey: 'your-key'
+ *   });
+ *   const result = await instance.complexMethod(params);
+ * } catch (error) {
+ *   if (error instanceof TtsError) {
+ *     console.error(`TTS Error: ${error.getUserMessage()}`);
+ *   }
+ * }
+ * ```
+ * 
+ * @category [Category Name from supported list above]
+ * @since [version when class was introduced]
+ * @see {@link RelatedClass} for related functionality
+ * @see {@link https://docs.provider.com/api | Provider API Documentation}
+ */
+export class ClassName {
+}
+```
+
+### Class Property Documentation
+Document significant class properties with TypeDoc syntax:
+
+```typescript
+/**
+ * Configuration options for retry behavior
+ * @readonly
+ */
+private readonly options: Required<RetryOptions>;
+
+/**
+ * Cache storage for voice data with automatic cleanup
+ * @internal
+ */
+private cache = new Map<string, CacheEntry<T>>();
+
+/**
+ * Current retry attempt count
+ * @defaultValue 0
+ */
+public retryCount: number = 0;
+```
+
+## Function/Method Documentation Standards
+
+### 🔄 Update Trigger: EVERY time a method is created, modified, parameters changed, or return type altered
+
+### Public Method Template
+All public methods must have comprehensive TypeDoc documentation:
+
+```typescript
+/**
+ * [Brief one-line description of what the method does]
+ * 
+ * [Detailed description explaining the method's behavior, side effects,
+ * and any important implementation details]
+ * 
+ * @param paramName - Description of parameter, including constraints or special values
+ * @param optionalParam - Description with default behavior when not provided
+ * @returns Promise resolving to the result with description of possible states
+ * 
+ * @throws {@link TtsAuthenticationError} When API credentials are invalid or expired
+ * @throws {@link TtsRateLimitError} When rate limits are exceeded
+ * @throws {@link TtsValidationError} When input parameters fail validation
+ * 
+ * @example Basic Usage
+ * ```typescript
+ * const result = await instance.methodName('input text');
+ * console.log(result.audio); // Uint8Array containing audio data
+ * ```
+ * 
+ * @example With Options
+ * ```typescript
+ * const result = await instance.methodName('text', {
+ *   voice: 'en-US-Standard-A',
+ *   audioFormat: 'mp3',
+ *   speed: 1.2
+ * });
+ * ```
+ * 
+ * @since 3.0.0
+ * @category [Category Name]
+ */
+public async methodName(
+  paramName: string, 
+  optionalParam?: MethodOptions
+): Promise<AudioResult> {
+}
+```
+
+### Static Method Template
+Static methods with emphasis on TypeDoc organization:
+
+```typescript
+/**
+ * [Brief description emphasizing static nature and utility]
+ * 
+ * This static method provides [functionality] without requiring class instantiation.
+ * 
+ * @param paramName - Description of parameter
+ * @returns Description of return value
+ * 
+ * @example
+ * ```typescript
+ * const result = ClassName.staticMethod(params);
+ * // Use result...
+ * ```
+ * 
+ * @static
+ * @category [Category Name]
+ */
+public static staticMethod(paramName: Type): ReturnType {
+}
+```
+
+### Private Method Template
+Private methods with internal documentation:
+
+```typescript
+/**
+ * [Brief description of internal method purpose]
+ * 
+ * @param paramName - Description of parameter
+ * @returns Description of return value
+ * @internal
+ */
+private _internalMethod(paramName: Type): ReturnType {
+}
+```
+
+## Interface and Type Documentation
+
+### 🔄 Update Trigger: EVERY time interfaces/types are created, properties added/removed, or usage changes
+
+### Interface Documentation
+Document all exported interfaces with TypeDoc-specific features:
+
+```typescript
+/**
+ * Configuration options for text-to-speech conversion
+ * 
+ * This interface defines all available options for customizing TTS output,
+ * including voice selection, audio format, and speech parameters.
+ * 
+ * @example
+ * ```typescript
+ * const config: TtsConfig = {
+ *   voice: 'en-US-Standard-A',
+ *   audioFormat: 'mp3',
+ *   speed: 1.0,
+ *   pitch: 0
+ * };
+ * ```
+ * 
+ * @category Configuration
+ */
+export interface TtsConfig {
+  /**
+   * Voice identifier for speech synthesis
+   * @see {@link VoiceList.getVoices} for available voices
+   */
+  voice: string;
+  
+  /**
+   * Output audio format
+   * @defaultValue 'mp3'
+   */
+  audioFormat?: AudioFormat;
+  
+  /**
+   * Speech speed multiplier
+   * @remarks Must be between 0.25 and 4.0
+   * @defaultValue 1.0
+   */
+  speed?: number;
+}
+```
+
+### Type Alias Documentation
+Document complex type aliases with usage context:
+
+```typescript
+/**
+ * Supported audio output formats across all TTS providers
+ * 
+ * Each provider may support different subsets of these formats.
+ * Use {@link AudioCapabilities.getSupportedFormats} to check provider-specific support.
+ * 
+ * @category Audio Processing
+ */
+export type AudioFormat = 'mp3' | 'wav' | 'ogg' | 'flac';
+
+/**
+ * Union type representing all possible TTS error types
+ * 
+ * @category Error Handling
+ */
+export type TtsErrorType = 
+  | TtsAuthenticationError 
+  | TtsRateLimitError 
+  | TtsValidationError 
+  | TtsNetworkError;
+```
+
+## Error Handling Documentation
+
+### Error Class Documentation
+Document custom error classes with TypeDoc-specific error handling:
+
+```typescript
+/**
+ * Base error class for all Text-to-Speech operations
+ * 
+ * Provides standardized error handling with retry information,
+ * provider context, and user-friendly error messages.
+ * 
+ * @example Catching and Handling TTS Errors
+ * ```typescript
+ * try {
+ *   const audio = await tts.convert('Hello world');
+ * } catch (error) {
+ *   if (error instanceof TtsError) {
+ *     console.error(`Error: ${error.getUserMessage()}`);
+ *     
+ *     if (error.retryable) {
+ *       // Implement retry logic
+ *       console.log('Error is retryable, attempting again...');
+ *     }
+ *   }
+ * }
+ * ```
+ * 
+ * @example Creating Custom TTS Errors
+ * ```typescript
+ * throw new TtsError(
+ *   'Voice not found',
+ *   TtsErrorCode.INVALID_VOICE,
+ *   {
+ *     provider: 'google',
+ *     retryable: false,
+ *     context: { voiceId: 'invalid-voice-id' }
+ *   }
+ * );
+ * ```
+ * 
+ * @category Error Handling
+ */
+export class TtsError extends Error {
+  /**
+   * Standardized error code for programmatic handling
+   * @readonly
+   */
+  public readonly code: TtsErrorCode;
+  
+  /**
+   * Whether this error condition can be retried
+   * @readonly
+   */
+  public readonly retryable: boolean;
+}
+```
+
+## TypeDoc-Specific Tags and Features
+
+### Required TypeDoc Tags
+Use these TypeDoc-specific tags for better documentation generation:
+
+```typescript
+/**
+ * Method description
+ * 
+ * @param param - Parameter description
+ * @returns Return description
+ * @throws {ErrorType} Error description with {@link ErrorType} link
+ * @example Example with proper syntax highlighting
+ * @since Version information
+ * @deprecated Use {@link NewMethod} instead
+ * @see {@link RelatedClass} or {@link https://external-link.com | External Link}
+ * @category Category Name
+ * @internal For internal APIs not shown in public docs
+ * @readonly For readonly properties
+ * @defaultValue For default parameter values
+ * @remarks Additional important information
+ * @typeParam T - Description of generic type parameter
+ */
+```
+
+### Generic Type Documentation
+Document generic types and constraints:
+
+```typescript
+/**
+ * Generic cache implementation with automatic expiration
+ * 
+ * @template T - The type of data being cached
+ * @template K - The type of cache keys, defaults to string
+ * 
+ * @example
+ * ```typescript
+ * // Cache voice data with string keys
+ * const voiceCache = new Cache<VoiceData>();
+ * 
+ * // Cache with custom key type
+ * const customCache = new Cache<UserData, number>();
+ * ```
+ * 
+ * @category Common Utilities
+ */
+export class Cache<T, K extends string | number = string> {
+  /**
+   * Stores an item in the cache with optional TTL
+   * 
+   * @param key - Cache key of type K
+   * @param value - Value to cache of type T
+   * @param ttl - Time to live in milliseconds
+   * @typeParam T - Type of the cached value
+   * @typeParam K - Type of the cache key
+   */
+  set(key: K, value: T, ttl?: number): void {
+  }
+}
+```
+
+## Code Examples Standards
+
+### Example Quality Requirements
+All `@example` tags must contain:
+- **Working code** that can be copy-pasted and run
+- **Proper imports** when necessary
+- **Error handling** for complex examples
+- **Comments** explaining key steps
+- **Multiple examples** for complex methods (basic + advanced)
+
+### Example Template
+```typescript
+/**
+ * Method description
+ * 
+ * @example Basic Usage
+ * ```typescript
+ * import { TtsUniversal } from 'cloud-text-to-speech';
+ * 
+ * // Initialize TTS
+ * TtsUniversal.init({
+ *   provider: 'google',
+ *   googleParams: { apiKey: 'your-api-key' }
+ * });
+ * 
+ * // Convert text to speech
+ * const result = await TtsUniversal.convertTts({
+ *   text: 'Hello world',
+ *   voice: { name: 'en-US-Standard-A' }
+ * });
+ * 
+ * console.log(`Generated ${result.audio.length} bytes of audio`);
+ * ```
+ * 
+ * @example Advanced Usage with Error Handling
+ * ```typescript
+ * try {
+ *   const result = await TtsUniversal.convertTts({
+ *     text: 'Complex text with SSML <break time="1s"/> pauses',
+ *     voice: { 
+ *       name: 'en-US-Neural2-A',
+ *       provider: 'google'
+ *     },
+ *     audioConfig: {
+ *       audioEncoding: 'MP3',
+ *       speakingRate: 1.2,
+ *       pitch: 2.0
+ *     }
+ *   });
+ *   
+ *   // Save audio to file
+ *   await fs.writeFile('output.mp3', result.audio);
+ *   console.log('Audio saved successfully');
+ *   
+ * } catch (error) {
+ *   if (error instanceof TtsRateLimitError) {
+ *     console.log(`Rate limited, retry after ${error.retryAfter} seconds`);
+ *   } else if (error instanceof TtsAuthenticationError) {
+ *     console.error('Authentication failed, check your API key');
+ *   }
+ * }
+ * ```
+ */
+```
+
+## Inline Code Documentation Standards
+
+### 🔄 Update Trigger: EVERY time code logic is added, modified, refactored, or optimized
+
+### Single-Line Comments for Complex Logic
+Use clear, descriptive comments for complex algorithms and business logic:
+
+```typescript
+// Cache hit: return cached data if not expired
+if (cached && Date.now() - cached.timestamp < cached.ttl) {
+    return cached.data;
+}
+
+// Apply exponential backoff with jitter to prevent thundering herd
+const baseDelay = Math.min(1000 * Math.pow(2, attempt), this.maxDelay);
+const jitteredDelay = baseDelay * (0.5 + Math.random() * 0.5);
+
+// Provider-specific rate limit headers take precedence over calculated delay
+if (error.retryAfter && error.retryAfter > jitteredDelay / 1000) {
+    return error.retryAfter * 1000;
+}
+```
+
+### Comment Style Guidelines
+- Place comments **above** the code they describe
+- Use comments to explain **why** and **how**, not **what**
+- Keep comments concise but descriptive
+- Update comments when refactoring code
+- Use proper grammar and punctuation
+
+## File Header Standards
+
+### 🔄 Update Trigger: EVERY time a new file is created or a file's purpose/functionality significantly changes
+
+### Mandatory TypeDoc File Headers
+**ALL TypeScript files MUST start with a comprehensive `@fileoverview` section** before any imports or code. This is not optional - it's required for generating proper API documentation.
+
+### Complete File Header Template
+Every TypeScript file must include:
+
+```typescript
+/**
+ * @fileoverview [Brief description of module purpose and functionality]
+ * 
+ * [Detailed description explaining what the module does, its main responsibilities,
+ * key features, and how it integrates with other parts of the system. Include
+ * information about supported providers, algorithms, or patterns used.]
+ * 
+ * [Additional context about the module's role in the larger system, any important
+ * architectural decisions, or performance considerations.]
+ * 
+ * @author Marko Kostich
+ * @since [version when module was introduced]
+ * @see {@link https://github.com/markokosticdev/cloud_text_to_speech_nodejs | GitHub Repository}
+ * @see {@link RelatedInterface} for related functionality
+ * @see {@link https://external-docs.com | External Documentation}
+ * 
+ * @example Basic usage example
+ * ```typescript
+ * import { MainClass } from './module.js';
+ * 
+ * // Initialize and use the main functionality
+ * const instance = new MainClass(config);
+ * const result = await instance.primaryMethod();
+ * console.log(result);
+ * ```
+ * 
+ * @example Advanced usage with error handling
+ * ```typescript
+ * import { MainClass, ErrorType } from './module.js';
+ * 
+ * try {
+ *   const instance = new MainClass({
+ *     option1: 'value1',
+ *     option2: 'value2'
+ *   });
+ *   
+ *   const result = await instance.complexMethod(parameters);
+ *   // Handle successful result
+ * } catch (error) {
+ *   if (error instanceof ErrorType) {
+ *     console.error('Specific error handling');
+ *   }
+ * }
+ * ```
+ * 
+ * @example Integration with other modules
+ * ```typescript
+ * import { MainClass } from './module.js';
+ * import { HelperModule } from '../helpers/helper.js';
+ * 
+ * // Show how this module integrates with others
+ * const helper = new HelperModule();
+ * const main = new MainClass(helper.getConfig());
+ * 
+ * const combined = await main.useWith(helper);
+ * ```
+ * 
+ * @example Production deployment pattern
+ * ```typescript
+ * // Show real-world usage patterns
+ * const productionConfig = {
+ *   provider: 'google',
+ *   timeout: 30000,
+ *   retries: 3
+ * };
+ * 
+ * const service = new MainClass(productionConfig);
+ * 
+ * // Production error handling
+ * service.on('error', (error) => {
+ *   logger.error('Service error:', error);
+ * });
+ * 
+ * await service.start();
+ * ```
+ */
+```
+
+### File Header Requirements by Module Type
+
+#### Core API Modules
+```typescript
+/**
+ * @fileoverview [Provider] Text-to-Speech API Implementation
+ * 
+ * This module provides the core TTS functionality for [Provider Name] including
+ * audio synthesis, voice management, and SSML processing. It handles authentication,
+ * request formatting, response parsing, and error handling specific to [Provider]'s API.
+ * 
+ * The implementation includes rate limiting, retry logic, and comprehensive error
+ * mapping to provide a consistent interface regardless of provider-specific quirks.
+ * 
+ * @author Marko Kostich
+ * @since 3.0.0
+ * @see {@link https://github.com/markokosticdev/cloud_text_to_speech_nodejs | GitHub Repository}
+ * @see {@link https://[provider-docs-url] | [Provider] TTS Documentation}
+ * 
+ * [Multiple comprehensive examples showing basic usage, advanced features,
+ * error handling, and integration patterns]
+ */
+```
+
+#### Utility Modules
+```typescript
+/**
+ * @fileoverview [Utility Purpose] Utilities for Cloud Text-to-Speech
+ * 
+ * This module provides [specific utility functions] used across multiple TTS providers.
+ * It includes [list key features] with support for [specific capabilities].
+ * 
+ * The utilities are designed to be provider-agnostic and handle common operations
+ * like [examples of operations] with consistent behavior and error handling.
+ * 
+ * @author Marko Kostich
+ * @since 3.0.0
+ * @see {@link https://github.com/markokosticdev/cloud_text_to_speech_nodejs | GitHub Repository}
+ * 
+ * [Examples showing utility usage across different contexts]
+ */
+```
+
+#### Configuration Modules
+```typescript
+/**
+ * @fileoverview Configuration Management for [Specific Area]
+ * 
+ * This module handles configuration loading, validation, and management for [area].
+ * It supports multiple configuration sources including environment variables,
+ * JSON files, and runtime configuration with proper precedence handling.
+ * 
+ * The configuration system follows 12-factor app principles and provides
+ * comprehensive validation with detailed error reporting for production deployments.
+ * 
+ * @author Marko Kostich
+ * @since 3.0.0
+ * @see {@link https://github.com/markokosticdev/cloud_text_to_speech_nodejs | GitHub Repository}
+ * 
+ * [Examples showing configuration loading, validation, and usage patterns]
+ */
+```
+
+#### Error Handling Modules
+```typescript
+/**
+ * @fileoverview Error Handling System for [Specific Component]
+ * 
+ * This module defines custom error types, error mapping, and error handling utilities
+ * for [component]. It provides structured error information with context, retry
+ * guidance, and user-friendly messaging for different error scenarios.
+ * 
+ * The error system includes automatic error categorization, provider-specific
+ * error mapping, and integration with retry and circuit breaker patterns.
+ * 
+ * @author Marko Kostich
+ * @since 3.0.0
+ * @see {@link https://github.com/markokosticdev/cloud_text_to_speech_nodejs | GitHub Repository}
+ * 
+ * [Examples showing error creation, handling, and recovery patterns]
+ */
+```
+
+### File Header Quality Standards
+
+#### Required Elements
+- **Clear module purpose** - One sentence summary + detailed description
+- **Author information** - Always "Marko Kostich"
+- **Version information** - `@since` tag with version
+- **GitHub repository link** - Standard link format
+- **Related documentation** - Links to provider docs, RFCs, specifications
+- **Multiple working examples** - At least 2-4 comprehensive examples
+- **Cross-references** - Links to related modules and interfaces
+
+#### Example Requirements
+- **Basic usage** - Simple, copy-paste ready example
+- **Advanced usage** - Complex scenario with error handling
+- **Integration** - How module works with other parts
+- **Production patterns** - Real-world deployment examples
+- **All examples must be runnable** - Include necessary imports and setup
+
+### File Header Validation
+- **Required for all .ts files** - No exceptions
+- **Must be first thing in file** - Before any imports
+- **Must include working examples** - Validated during build
+- **Must have proper cross-references** - Links validated
+- **Must match module's actual functionality** - Reviewed in PR
+
+### Common File Header Mistakes to Avoid
+❌ **Missing @fileoverview entirely**
+❌ **Generic or copy-pasted descriptions**
+❌ **Examples that don't work or lack imports**
+❌ **Missing @since version information**
+❌ **No cross-references to related modules**
+❌ **Single basic example instead of comprehensive coverage**
+❌ **Descriptions that don't match actual code functionality**
+
+✅ **Complete, module-specific documentation**
+✅ **Multiple working examples covering different scenarios**
+✅ **Proper version and authorship information**
+✅ **Extensive cross-references and external links**
+✅ **Production-ready examples and patterns**
+✅ **Clear integration guidance**
+
+## Enforcement & TypeDoc Integration
+
+### TypeDoc Configuration Requirements
+Your `typedoc.json` must include:
+- Proper categorization with `categorizeByGroup: true`
+- Validation settings for documentation completeness
+- GitHub integration for source links
+- Search functionality with `searchInComments: true`
+
+### Code Review Checklist
+**Every pull request MUST verify:**
+- [ ] All new classes have class-level TypeDoc comments with `@category` tags
+- [ ] All new/modified public methods have comprehensive TypeDoc documentation
+- [ ] All `@example` tags contain working, runnable code
+- [ ] Method signatures match the documented parameters and return types
+- [ ] Error conditions are documented with `@throws` tags linking to specific error types
+- [ ] Generic types include `@typeParam` documentation
+- [ ] Complex logic has explanatory inline comments
+- [ ] Generated TypeDoc HTML is reviewed for accuracy and completeness
+
+### Automated TypeDoc Validation
+```bash
+# Generate documentation and check for issues
+npm run docs:html
+
+# Validate documentation coverage
+npm run docs:coverage
+
+# Test all code examples in documentation
+npm run docs:test-examples
+
+# Watch for changes and regenerate docs
+npm run docs:watch
+
+# Serve documentation locally for review
+npm run docs:serve
+```
+
+### Quality Standards for TypeDoc Output
+- **Navigation clarity** - Proper categorization for easy browsing
+- **Search functionality** - All content searchable including comments
+- **Cross-references** - Extensive use of `{@link}` tags for related items
+- **Working examples** - All examples must be tested and functional
+- **Visual hierarchy** - Proper use of headings, lists, and code blocks
+- **Mobile-friendly** - Documentation must be readable on all devices
+
+### TypeDoc Documentation Debt Prevention
+- **Block merges** if TypeDoc generation fails or produces warnings
+- **Require category assignment** for all public classes and interfaces
+- **Mandate working examples** for all public APIs
+- **Enforce link validation** to ensure all `{@link}` references are valid
+- **Check example syntax** to ensure all code examples have proper syntax highlighting
+
+**Remember: TypeDoc documentation is the primary way users will interact with your API. High-quality TypeDoc comments directly translate to professional, comprehensive documentation websites that users can easily navigate and understand.**

@@ -97,7 +97,7 @@ examples/
         ├── microsoft-detailed.ts # Microsoft with all options
         ├── universal-single-detailed.ts    # Advanced single provider
         ├── universal-combined-detailed.ts  # Advanced combined providers
-        └── universal-enhanced-features.ts  # 🆕 Enhanced v3 features showcase
+        └── universal-enhanced-features.ts  # 🆕 Enhanced features showcase
 ```
 
 ## 🎯 Available Examples

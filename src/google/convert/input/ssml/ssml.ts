@@ -1,6 +1,6 @@
-import { ConvertSsmlOptionsGoogle } from '../convert_ssml_options.js';
-import { SsmlBase } from '../../../common/convert/input/ssml/ssml_base.js';
-import { VoiceGoogle } from '../../voices/voices_model.js';
+import { ConvertSsmlOptionsGoogle } from '../../convert_ssml_options.js';
+import { SsmlBase } from '../../../../common/convert/input/ssml/ssml_base.js';
+import { VoiceGoogle } from '../../../voices/voices_model.js';
 
 export class SsmlGoogle extends SsmlBase<
   VoiceGoogle,

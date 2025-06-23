@@ -1,7 +1,7 @@
 import { AudioSuccessAmazon } from './audio_responses.js';
 import axios, { AxiosInstance } from 'axios';
 import { AudioResponseMapperAmazon } from './audio_response_mapper.js';
-import { SsmlAmazon } from '../input/ssml.js';
+import { SsmlAmazon } from '../input/ssml/ssml.js';
 import { EndpointsAmazon } from '../../common/constants.js';
 import { VoicesClientAmazon } from '../../voices/voices_client.js';
 import { AudioClientAmazon } from './audio_client.js';
@@ -9,7 +9,7 @@ import { HttpResponseBase } from '../../../common/http/http_response_base.js';
 import { ConvertParamsAmazon } from '../convert_params.js';
 import { AudioHandler } from '../../../common/convert/audio/audio_handler.js';
 import { AudioJoiner } from '../../../common/convert/audio/audio_joiner.js';
-import { TextAmazon } from '../input/text.js';
+import { TextAmazon } from '../input/text/text.js';
 
 export class AudioHandlerAmazon {
   async getAudio(params: ConvertParamsAmazon): Promise<AudioSuccessAmazon> {
@@ -125,7 +125,7 @@ export class AudioHandlerAmazon {
       pitch: params.pitch,
       voice: params.voice,
       voiceId: params.voiceId,
-      options: params.ssmlOptions,
+      options: params.textOptions,
     });
 
     if (params.processOptions.processAsync) {

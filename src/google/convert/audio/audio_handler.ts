@@ -1,8 +1,133 @@
+/**
+ * @fileoverview Google Cloud Text-to-Speech Audio Processing Handler
+ * 
+ * This module provides the main audio processing handler for Google Cloud Text-to-Speech
+ * operations. It orchestrates the complete TTS pipeline including input processing,
+ * HTTP client management, concurrent request handling, and audio response processing.
+ * 
+ * The handler supports both SSML and plain text input, implements advanced processing
+ * options like async/sync execution, rate limiting, error handling, and progress
+ * monitoring. It provides a comprehensive solution for Google TTS audio generation
+ * with enterprise-grade features and optimizations.
+ * 
+ * @author Marko Kostich
+ * @since 3.0.0
+ * @see {@link https://github.com/markokosticdev/cloud_text_to_speech_nodejs | GitHub Repository}
+ * @see {@link https://cloud.google.com/text-to-speech/docs | Google TTS Documentation}
+ * @see {@link AudioHandler} for base audio processing functionality
+ * 
+ * @example Basic Audio Processing
+ * ```typescript
+ * import { AudioHandlerGoogle } from './audio_handler.js';
+ * import { ConvertParamsGoogle } from '../convert_params.js';
+ * import { AuthenticationHeaderGoogle } from '../../auth/authentication_types.js';
+ * 
+ * const handler = new AudioHandlerGoogle();
+ * const authHeader: AuthenticationHeaderGoogle = {
+ *   type: 'Authorization',
+ *   headerValue: 'Bearer your-access-token'
+ * };
+ * 
+ * const params = new ConvertParamsGoogle({
+ *   text: 'Hello, world!',
+ *   voice: { name: 'en-US-Neural2-A' },
+ *   audioOptions: { audioFormat: 'MP3' }
+ * });
+ * 
+ * const audioResponse = await handler.getAudio(params, authHeader);
+ * const audioBuffer = Buffer.from(audioResponse.audio);
+ * ```
+ * 
+ * @example Advanced Processing with SSML
+ * ```typescript
+ * import { AudioHandlerGoogle } from './audio_handler.js';
+ * 
+ * const handler = new AudioHandlerGoogle();
+ * 
+ * const params = new ConvertParamsGoogle({
+ *   ssml: '<speak><prosody rate="slow">Hello world</prosody></speak>',
+ *   voice: { name: 'en-US-Neural2-A' },
+ *   audioOptions: { audioFormat: 'LINEAR16' },
+ *   processOptions: {
+ *     processAsync: true,
+ *     processLimit: 5,
+ *     enableMonitoring: true,
+ *     enableRetry: true
+ *   }
+ * });
+ * 
+ * const audioResponse = await handler.getAudio(params, authHeader);
+ * ```
+ * 
+ * @example Production Pipeline with Error Handling
+ * ```typescript
+ * import { AudioHandlerGoogle } from './audio_handler.js';
+ * 
+ * class GoogleTTSPipeline {
+ *   private handler = new AudioHandlerGoogle();
+ * 
+ *   async synthesizeAudio(
+ *     text: string,
+ *     voice: string,
+ *     authHeader: AuthenticationHeaderGoogle
+ *   ): Promise<Buffer> {
+ *     try {
+ *       const params = new ConvertParamsGoogle({
+ *         text,
+ *         voice: { name: voice },
+ *         audioOptions: { audioFormat: 'MP3' },
+ *         processOptions: {
+ *           enableEnhancedErrors: true,
+ *           enableRetry: true,
+ *           enableRateLimiting: true,
+ *           onProgress: (progress) => {
+ *             console.log(`Progress: ${progress.percentage}%`);
+ *           }
+ *         }
+ *       });
+ * 
+ *       const result = await this.handler.getAudio(params, authHeader);
+ *       return Buffer.from(result.audio);
+ *     } catch (error) {
+ *       console.error('TTS synthesis failed:', error);
+ *       throw error;
+ *     }
+ *   }
+ * }
+ * ```
+ * 
+ * @example Long Text Processing with Chunking
+ * ```typescript
+ * import { AudioHandlerGoogle } from './audio_handler.js';
+ * 
+ * const handler = new AudioHandlerGoogle();
+ * 
+ * const longText = "Very long text that will be automatically chunked...";
+ * 
+ * const params = new ConvertParamsGoogle({
+ *   textChunks: [longText], // Will be automatically processed in chunks
+ *   voice: { name: 'en-US-Neural2-A' },
+ *   audioOptions: { audioFormat: 'MP3' },
+ *   processOptions: {
+ *     processAsync: true,
+ *     processLimit: 3, // Process 3 chunks concurrently
+ *     enableTiming: true,
+ *     onItemComplete: (index, result) => {
+ *       console.log(`Chunk ${index} completed`);
+ *     }
+ *   }
+ * });
+ * 
+ * const audioResponse = await handler.getAudio(params, authHeader);
+ * // Audio from all chunks is automatically joined
+ * ```
+ */
+
 import { AuthenticationHeaderGoogle } from '../../auth/authentication_types.js';
 import { AudioSuccessGoogle } from './audio_responses.js';
 import axios, { AxiosInstance } from 'axios';
 import { AudioResponseMapperGoogle } from './audio_response_mapper.js';
-import { SsmlGoogle } from '../input/ssml.js';
+import { SsmlGoogle } from '../input/ssml/ssml.js';
 import { EndpointsGoogle } from '../../common/constants.js';
 import { VoicesClientGoogle } from '../../voices/voices_client.js';
 import { AudioClientGoogle } from './audio_client.js';
@@ -10,10 +135,107 @@ import { HttpResponseBase } from '../../../common/http/http_response_base.js';
 import { ConvertParamsGoogle } from '../convert_params.js';
 import { AudioHandler, ProcessingOptions } from '../../../common/convert/audio/audio_handler.js';
 import { AudioJoiner } from '../../../common/convert/audio/audio_joiner.js';
-import { TextGoogle } from '../input/text.js';
+import { TextGoogle } from '../input/text/text.js';
 import { HttpClientEnhancer } from '../../../common/http/http_interceptors.js';
 
+/**
+ * Google Cloud Text-to-Speech audio processing handler
+ * 
+ * Main handler class that orchestrates the complete Google TTS audio processing
+ * pipeline. Manages HTTP clients, processes both SSML and text input, handles
+ * concurrent operations, and provides comprehensive error handling and monitoring.
+ * 
+ * The handler automatically determines the input type (SSML vs text), creates
+ * optimized HTTP clients with interceptors, processes content in chunks for
+ * large inputs, and joins audio results into a single response.
+ * 
+ * @example Basic Audio Generation
+ * ```typescript
+ * const handler = new AudioHandlerGoogle();
+ * const result = await handler.getAudio(params, authHeader);
+ * const audioData = result.audio; // Uint8Array
+ * ```
+ * 
+ * @example With Progress Monitoring
+ * ```typescript
+ * const handler = new AudioHandlerGoogle();
+ * // Configure params with monitoring options
+ * const result = await handler.getAudio(paramsWithMonitoring, authHeader);
+ * ```
+ * 
+ * @category Google Cloud TTS
+ * @since 3.0.0
+ */
 export class AudioHandlerGoogle {
+  /**
+   * Generates audio from text or SSML using Google Cloud Text-to-Speech
+   * 
+   * Main method that orchestrates the complete audio generation process.
+   * Automatically detects input type (SSML vs text), creates enhanced HTTP
+   * clients with interceptors, processes content in chunks if needed, and
+   * joins multiple audio responses into a single result.
+   * 
+   * @param params - Complete conversion parameters including input, voice, and processing options
+   * @param authHeader - Google Cloud authentication header configuration
+   * @returns Promise resolving to successful audio response with generated audio data
+   * 
+   * @throws {AudioFailedBadRequestGoogle} When request parameters are invalid
+   * @throws {AudioFailedUnauthorizedGoogle} When authentication fails
+   * @throws {AudioFailedTooManyRequestGoogle} When rate limits are exceeded
+   * @throws {Error} For other processing errors
+   * 
+   * @example Basic Text Synthesis
+   * ```typescript
+   * const handler = new AudioHandlerGoogle();
+   * 
+   * const params = new ConvertParamsGoogle({
+   *   text: 'Hello, world!',
+   *   voice: { name: 'en-US-Neural2-A' },
+   *   audioOptions: { audioFormat: 'MP3' }
+   * });
+   * 
+   * const authHeader = {
+   *   type: 'Authorization',
+   *   headerValue: 'Bearer your-token'
+   * };
+   * 
+   * const result = await handler.getAudio(params, authHeader);
+   * const audioBuffer = Buffer.from(result.audio);
+   * ```
+   * 
+   * @example SSML Synthesis with Processing Options
+   * ```typescript
+   * const params = new ConvertParamsGoogle({
+   *   ssml: '<speak><prosody rate="slow">Hello world</prosody></speak>',
+   *   voice: { name: 'en-US-Neural2-A' },
+   *   audioOptions: { audioFormat: 'LINEAR16' },
+   *   processOptions: {
+   *     processAsync: true,
+   *     processLimit: 5,
+   *     enableMonitoring: true
+   *   }
+   * });
+   * 
+   * const result = await handler.getAudio(params, authHeader);
+   * ```
+   * 
+   * @example Large Content Processing
+   * ```typescript
+   * const params = new ConvertParamsGoogle({
+   *   textChunks: ['Chunk 1...', 'Chunk 2...', 'Chunk 3...'],
+   *   voice: { name: 'en-US-Neural2-A' },
+   *   audioOptions: { audioFormat: 'MP3' },
+   *   processOptions: {
+   *     processAsync: true,
+   *     processLimit: 3, // Process 3 chunks concurrently
+   *     onProgress: (progress) => console.log(`${progress.percentage}%`)
+   *   }
+   * });
+   * 
+   * const result = await handler.getAudio(params, authHeader);
+   * // All chunks automatically joined into single audio
+   * ```
+   */
   async getAudio(
     params: ConvertParamsGoogle,
     authHeader: AuthenticationHeaderGoogle,
@@ -162,7 +384,7 @@ export class AudioHandlerGoogle {
       pitch: params.pitch,
       voice: params.voice,
       voiceId: params.voiceId,
-      options: params.ssmlOptions,
+      options: params.textOptions,
     });
 
     const processingOptions = this.createProcessingOptions(params);

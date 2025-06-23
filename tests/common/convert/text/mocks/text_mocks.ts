@@ -44,7 +44,7 @@ export class MockAdvancedTextImplementation extends TextBase<string, MockTextOpt
     customTemplate?: (text: string) => string
   ) {
     super(params);
-    this.customTemplate = customTemplate ?? ((text: string) => `<speak>${text}</speak>`);
+    this.customTemplate = customTemplate ?? ((text: string): string => `<speak>${text}</speak>`);
   }
 
   protected textRootTemplate(text: string): string {
@@ -102,7 +102,10 @@ export const createMockTextImplementation = (
     splitLimit?: number;
     customTemplate?: (text: string) => string;
   }
-) => {
+): {
+  options: MockTextOptions;
+  createInstance: (params: { text?: string; textChunks?: string[]; voice?: string; voiceId?: string; }) => MockTextImplementation | MockAdvancedTextImplementation | MockGoogleTextImplementation | MockMicrosoftTextImplementation | MockAmazonTextImplementation;
+} => {
   const options = new MockTextOptions({ splitLimit: overrides?.splitLimit });
 
   const implementations = {
@@ -121,7 +124,7 @@ export const createMockTextImplementation = (
       textChunks?: string[];
       voice?: string;
       voiceId?: string;
-    }) => {
+    }): MockTextImplementation | MockAdvancedTextImplementation | MockGoogleTextImplementation | MockMicrosoftTextImplementation | MockAmazonTextImplementation => {
       const baseParams = {
         rate: '1.0',
         pitch: '0',

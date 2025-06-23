@@ -1,5 +1,5 @@
 import { SsmlValidator } from '../../../../src/common/convert/input/ssml/ssml_validator.js';
-import { GOOGLE_SSML_ALLOWED_ELEMENTS } from '../../../../src/common/convert/input/ssml/schemas/google_ssml_schema.js';
+import { GOOGLE_SSML_ALLOWED_ELEMENTS } from '../../../../src/google/convert/input/ssml/ssml_schema.js';
 
 describe('SSML Validation Tests', () => {
   test('should validate basic SSML content', () => {
@@ -28,7 +28,9 @@ describe('SSML Validation Tests', () => {
 
   test('should detect unsupported attributes', () => {
     const ssml = '<speak><emphasis level="strong" unsupported="value">Hello</emphasis></speak>';
-    const result = SsmlValidator.validate(ssml, GOOGLE_SSML_ALLOWED_ELEMENTS);
+    const result = SsmlValidator.validate(ssml, GOOGLE_SSML_ALLOWED_ELEMENTS, {
+      validateAttributes: true
+    });
     
     expect(result.isValid).toBe(false);
     expect(result.errors.some(e => e.code === 'UNSUPPORTED_ATTRIBUTE')).toBe(true);

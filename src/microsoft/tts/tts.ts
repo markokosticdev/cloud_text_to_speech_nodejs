@@ -99,6 +99,10 @@ export class TtsMicrosoft {
   }
 
   private static _initLogs(withLogs: boolean): void {
-    withLogs ? Log.enable() : Log.disable();
+    if (withLogs) {
+      Log.enable();
+    } else {
+      Log.disable();
+    }
   }
 }

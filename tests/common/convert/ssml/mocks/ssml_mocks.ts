@@ -3,9 +3,9 @@ import { SsmlMinimizer } from '../../../../../src/common/convert/input/ssml/ssml
 import { ConvertSsmlOptionsGoogle } from '../../../../../src/google/convert/convert_ssml_options.js';
 import { ConvertSsmlOptionsMicrosoft } from '../../../../../src/microsoft/convert/convert_ssml_options.js';
 import { ConvertSsmlOptionsAmazon } from '../../../../../src/amazon/convert/convert_ssml_options.js';
-import { GOOGLE_SSML_ALLOWED_ELEMENTS } from '../../../../../src/common/convert/input/ssml/schemas/google_ssml_schema.js';
-import { MICROSOFT_SSML_ALLOWED_ELEMENTS } from '../../../../../src/common/convert/input/ssml/schemas/microsoft_ssml_schema.js';
-import { AMAZON_SSML_ALLOWED_ELEMENTS } from '../../../../../src/common/convert/input/ssml/schemas/amazon_ssml_schema.js';
+import { GOOGLE_SSML_ALLOWED_ELEMENTS } from '../../../../../src/google/convert/input/ssml/ssml_schema.js';
+import { MICROSOFT_SSML_ALLOWED_ELEMENTS } from '../../../../../src/microsoft/convert/input/ssml/ssml_schema.js';
+import { AMAZON_SSML_ALLOWED_ELEMENTS } from '../../../../../src/amazon/convert/input/ssml/ssml_schema.js';
 
 /**
  * Mock root template mapper for testing SSML processing
@@ -29,7 +29,7 @@ export const mockAmazonRootTemplate: SsmlRootTemplateMapper = (ssml: string): st
 /**
  * Creates a minimized root template result for testing
  */
-export const createRootTemplateMinimized = (rootTemplate: SsmlRootTemplateMapper) => 
+export const createRootTemplateMinimized = (rootTemplate: SsmlRootTemplateMapper): ((text: string) => string) => 
   (text: string): string => SsmlMinimizer.minimize(rootTemplate(text));
 
 /**
@@ -113,7 +113,11 @@ export const ExpectedSsmlResults = {
 export const createSsmlTestScenario = (
   provider: 'google' | 'microsoft' | 'amazon',
   splitLimit?: number
-) => {
+): {
+  rootTemplate: SsmlRootTemplateMapper;
+  options: ConvertSsmlOptionsGoogle | ConvertSsmlOptionsMicrosoft | ConvertSsmlOptionsAmazon;
+  minimized: (text: string) => string;
+} => {
   const configs = {
     google: {
       rootTemplate: mockGoogleRootTemplate,

@@ -1,4 +1,4 @@
-# NEW TODO List for Cloud Text-to-Speech v3
+# NEW TODO List for Cloud Text-to-Speech
 ## Tasks Remaining to be Completed
 
 ## 🚀 ADDITIONAL IMPROVEMENTS IDENTIFIED

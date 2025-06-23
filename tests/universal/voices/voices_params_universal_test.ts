@@ -415,9 +415,9 @@ describe('VoicesParamsUniversal Tests', () => {
 
     test('should preserve HTTP proxy settings across provider mappings', () => {
       const httpProxy = new HttpProxyMapperOptionsUniversal({
-        google: () => new HttpProxyBase({ headers: { 'Google-Auth': 'test' } }),
-        microsoft: () => new HttpProxyBase({ headers: { 'Microsoft-Auth': 'test' } }),
-        amazon: () => new HttpProxyBase({ headers: { 'Amazon-Auth': 'test' } }),
+        google: (): HttpProxyBase => new HttpProxyBase({ headers: { 'Google-Auth': 'test' } }),
+        microsoft: (): HttpProxyBase => new HttpProxyBase({ headers: { 'Microsoft-Auth': 'test' } }),
+        amazon: (): HttpProxyBase => new HttpProxyBase({ headers: { 'Amazon-Auth': 'test' } }),
       });
 
       const params = new VoicesParamsUniversal({
@@ -459,13 +459,13 @@ describe('VoicesParamsUniversal Tests', () => {
     test('should handle complex male name mapping scenarios', () => {
       const nameOptions = new VoicesNameOptionsUniversal({
         google: new VoicesNameOptionsGoogle({
-          maleNamesMapper: (voices, index) => `google-${voices[index]?.name || 'default'}`,
+          maleNamesMapper: (voices, index): string => `google-${voices[index]?.name || 'default'}`,
         }),
         microsoft: new VoicesNameOptionsMicrosoft({
-          maleNamesMapper: (voices, index) => `microsoft-${voices[index]?.name || 'default'}`,
+          maleNamesMapper: (voices, index): string => `microsoft-${voices[index]?.name || 'default'}`,
         }),
         amazon: new VoicesNameOptionsAmazon({
-          maleNamesMapper: (voices, index) => `amazon-${voices[index]?.name || 'default'}`,
+          maleNamesMapper: (voices, index): string => `amazon-${voices[index]?.name || 'default'}`,
         }),
       });
 
@@ -486,13 +486,13 @@ describe('VoicesParamsUniversal Tests', () => {
     test('should handle complex female name mapping scenarios', () => {
       const nameOptions = new VoicesNameOptionsUniversal({
         google: new VoicesNameOptionsGoogle({
-          femaleNamesMapper: (voices, index) => `google-female-${voices[index]?.name || 'default'}`,
+          femaleNamesMapper: (voices, index): string => `google-female-${voices[index]?.name || 'default'}`,
         }),
         microsoft: new VoicesNameOptionsMicrosoft({
-          femaleNamesMapper: (voices, index) => `microsoft-female-${voices[index]?.name || 'default'}`,
+          femaleNamesMapper: (voices, index): string => `microsoft-female-${voices[index]?.name || 'default'}`,
         }),
         amazon: new VoicesNameOptionsAmazon({
-          femaleNamesMapper: (voices, index) => `amazon-female-${voices[index]?.name || 'default'}`,
+          femaleNamesMapper: (voices, index): string => `amazon-female-${voices[index]?.name || 'default'}`,
         }),
       });
 
@@ -509,10 +509,10 @@ describe('VoicesParamsUniversal Tests', () => {
       const nameOptions = new VoicesNameOptionsUniversal({
         google: new VoicesNameOptionsGoogle({
           maleNames: ['Voice1', 'Voice2'],
-          femaleNamesMapper: (voices, index) => voices[index]?.name || 'fallback',
+          femaleNamesMapper: (voices, index): string => voices[index]?.name || 'fallback',
         }),
         microsoft: new VoicesNameOptionsMicrosoft({
-          maleNamesMapper: (voices, index) => voices[index]?.name || 'fallback',
+          maleNamesMapper: (voices, index): string => voices[index]?.name || 'fallback',
           femaleNames: ['FemaleVoice1', 'FemaleVoice2'],
         }),
       });
@@ -561,13 +561,13 @@ describe('VoicesParamsUniversal Tests', () => {
   describe('HTTP Proxy Integration Tests', () => {
     test('should handle provider-specific proxy configurations', () => {
       const httpProxy = new HttpProxyMapperOptionsUniversal({
-        google: () => new HttpProxyBase({
+        google: (): HttpProxyBase => new HttpProxyBase({
           headers: { 'User-Agent': 'Google-TTS-Client' },
         }),
-        microsoft: () => new HttpProxyBase({
+        microsoft: (): HttpProxyBase => new HttpProxyBase({
           headers: { 'User-Agent': 'Microsoft-TTS-Client' },
         }),
-        amazon: () => new HttpProxyBase({
+        amazon: (): HttpProxyBase => new HttpProxyBase({
           headers: { 'User-Agent': 'Amazon-TTS-Client' },
         }),
       });
@@ -592,7 +592,7 @@ describe('VoicesParamsUniversal Tests', () => {
 
     test('should handle partial proxy configurations', () => {
       const httpProxy = new HttpProxyMapperOptionsUniversal({
-        google: () => new HttpProxyBase({ headers: { 'Auth': 'google-key' } }),
+        google: (): HttpProxyBase => new HttpProxyBase({ headers: { 'Auth': 'google-key' } }),
         // Microsoft and Amazon proxies not provided
       });
 
@@ -607,21 +607,21 @@ describe('VoicesParamsUniversal Tests', () => {
 
     test('should handle complex proxy header configurations', () => {
       const httpProxy = new HttpProxyMapperOptionsUniversal({
-        google: () => new HttpProxyBase({
+        google: (): HttpProxyBase => new HttpProxyBase({
           headers: {
             'Authorization': 'Bearer google-token',
             'Content-Type': 'application/json',
             'X-Custom-Header': 'google-value',
           },
         }),
-        microsoft: () => new HttpProxyBase({
+        microsoft: (): HttpProxyBase => new HttpProxyBase({
           headers: {
             'Ocp-Apim-Subscription-Key': 'microsoft-key',
             'Content-Type': 'application/ssml+xml',
             'X-Microsoft-OutputFormat': 'audio-16khz-128kbitrate-mono-mp3',
           },
         }),
-        amazon: () => new HttpProxyBase({
+        amazon: (): HttpProxyBase => new HttpProxyBase({
           headers: {
             'Authorization': 'AWS4-HMAC-SHA256 amazon-auth',
             'Content-Type': 'application/x-amz-json-1.0',
@@ -661,7 +661,7 @@ describe('VoicesParamsUniversal Tests', () => {
     test('should handle mapper function errors gracefully', () => {
       const nameOptions = new VoicesNameOptionsUniversal({
         google: new VoicesNameOptionsGoogle({
-          maleNamesMapper: (voices, index) => {
+          maleNamesMapper: (voices, index): string => {
             // Potentially throwing mapper
             if (index < 0 || index >= voices.length) {
               throw new Error('Index out of bounds');
@@ -682,7 +682,7 @@ describe('VoicesParamsUniversal Tests', () => {
 
     test('should handle proxy function errors gracefully', () => {
       const httpProxy = new HttpProxyMapperOptionsUniversal({
-        google: () => {
+        google: (): HttpProxyBase => {
           throw new Error('Proxy configuration error');
         },
       });

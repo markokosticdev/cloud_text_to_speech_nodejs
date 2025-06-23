@@ -2,7 +2,7 @@ import { AuthenticationHeaderMicrosoft } from '../../auth/authentication_types.j
 import { AudioSuccessMicrosoft } from './audio_responses.js';
 import axios, { AxiosInstance } from 'axios';
 import { AudioResponseMapperMicrosoft } from './audio_response_mapper.js';
-import { SsmlMicrosoft } from '../input/ssml.js';
+import { SsmlMicrosoft } from '../input/ssml/ssml.js';
 import { EndpointsMicrosoft } from '../../common/constants.js';
 import { VoicesClientMicrosoft } from '../../voices/voices_client.js';
 import { AudioClientMicrosoft } from './audio_client.js';
@@ -11,7 +11,7 @@ import { AudioTypeHeaderMicrosoft } from './audio_type_header.js';
 import { ConvertParamsMicrosoft } from '../convert_params.js';
 import { AudioHandler } from '../../../common/convert/audio/audio_handler.js';
 import { AudioJoiner } from '../../../common/convert/audio/audio_joiner.js';
-import { TextMicrosoft } from '../input/text.js';
+import { TextMicrosoft } from '../input/text/text.js';
 
 export class AudioHandlerMicrosoft {
   async getAudio(
@@ -125,7 +125,7 @@ export class AudioHandlerMicrosoft {
       pitch: params.pitch,
       voice: params.voice,
       voiceId: params.voiceId,
-      options: params.ssmlOptions,
+      options: params.textOptions,
     });
 
     if (params.processOptions.processAsync) {

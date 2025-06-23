@@ -2,7 +2,7 @@ import {
   SSML_SPLIT_LIMIT,
 } from './convert_params_defaults.js';
 import { SsmlOptions, SsmlValidationOptions } from '../../common/convert/input/ssml/ssml_options.js';
-import { AMAZON_SSML_ALLOWED_ELEMENTS } from '../../common/convert/input/ssml/schemas/amazon_ssml_schema.js';
+import { AMAZON_SSML_ALLOWED_ELEMENTS } from './input/ssml/ssml_schema.js';
 
 export class ConvertSsmlOptionsAmazon extends SsmlOptions {
   constructor({
@@ -23,17 +23,20 @@ export class ConvertSsmlOptionsAmazon extends SsmlOptions {
       allowUnknownElements: false,
     };
 
+    const mergedValidation: SsmlValidationOptions = { ...defaultValidation, ...validation };
+
     super(
       {
         allowedElements: AMAZON_SSML_ALLOWED_ELEMENTS,
         splitLimit: SSML_SPLIT_LIMIT,
         validation: defaultValidation,
+        preserveElements: true,
       },
       { 
         allowedElements, 
         splitLimit,
-        validation,
-      },
+        validation: mergedValidation,
+      }
     );
   }
 }

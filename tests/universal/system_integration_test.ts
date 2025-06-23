@@ -145,7 +145,7 @@ describe('TtsUniversal System Integration Tests', () => {
           }),
         }),
         httpProxy: new HttpProxyMapperOptionsUniversal({
-          google: () => new HttpProxyBase({
+          google: (): HttpProxyBase => new HttpProxyBase({
             headers: { 'Authorization': 'Bearer test-token' },
           }),
         }),
@@ -261,13 +261,13 @@ describe('TtsUniversal System Integration Tests', () => {
           }),
         }),
         httpProxy: new HttpProxyMapperOptionsUniversal({
-          google: () => new HttpProxyBase({
+          google: (): HttpProxyBase => new HttpProxyBase({
             headers: { 'User-Agent': 'TTS-Universal-Client/1.0' },
           }),
-          microsoft: () => new HttpProxyBase({
+          microsoft: (): HttpProxyBase => new HttpProxyBase({
             headers: { 'User-Agent': 'TTS-Universal-Client/1.0' },
           }),
-          amazon: () => new HttpProxyBase({
+          amazon: (): HttpProxyBase => new HttpProxyBase({
             headers: { 'User-Agent': 'TTS-Universal-Client/1.0' },
           }),
         }),
@@ -296,14 +296,14 @@ describe('TtsUniversal System Integration Tests', () => {
       const voicesParams = new VoicesParamsUniversal({
         nameOptions: new VoicesNameOptionsUniversal({
           google: new VoicesNameOptionsGoogle({
-            maleNamesMapper: (voices, index) => `google-${voices[index]?.name}`,
+            maleNamesMapper: (voices, index): string => `google-${voices[index]?.name}`,
           }),
           microsoft: new VoicesNameOptionsMicrosoft({
             femaleNames: ['en-US-JennyNeural'],
           }),
           amazon: new VoicesNameOptionsAmazon({
             maleNames: ['Matthew'],
-            femaleNamesMapper: (voices, index) => `amazon-${voices[index]?.name}`,
+            femaleNamesMapper: (voices, index): string => `amazon-${voices[index]?.name}`,
           }),
         }),
       });

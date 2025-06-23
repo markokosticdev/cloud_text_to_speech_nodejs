@@ -619,9 +619,9 @@ describe('ConvertParamsUniversal Tests', () => {
 
     test('should handle unsupported audio format gracefully', () => {
       const audioFormatMapper = new AudioOutputFormatMapperUniversal({
-        google: () => AudioOutputFormatGoogle.mp3,
-        microsoft: () => AudioOutputFormatMicrosoft.raw16Khz16BitMonoPcm,
-        amazon: () => AudioOutputFormatAmazon.mp3,
+        google: (): AudioOutputFormatGoogle => AudioOutputFormatGoogle.mp3,
+        microsoft: (): AudioOutputFormatMicrosoft => AudioOutputFormatMicrosoft.raw16Khz16BitMonoPcm,
+        amazon: (): AudioOutputFormatAmazon => AudioOutputFormatAmazon.mp3,
       });
 
       const audioOptions = new ConvertAudioOptionsUniversal({
@@ -645,10 +645,10 @@ describe('ConvertParamsUniversal Tests', () => {
     });
 
     test('should validate audio stream format mapping', () => {
-             const streamFormatMapper = new AudioOutputStreamFormatMapperUniversal({
-         google: () => AudioOutputStreamFormatGoogle.linear16,
-        microsoft: () => AudioOutputStreamFormatMicrosoft.raw16Khz16BitMonoPcm,
-        amazon: () => AudioOutputStreamFormatAmazon.pcm,
+                   const streamFormatMapper = new AudioOutputStreamFormatMapperUniversal({
+        google: (): AudioOutputStreamFormatGoogle => AudioOutputStreamFormatGoogle.linear16,
+        microsoft: (): AudioOutputStreamFormatMicrosoft => AudioOutputStreamFormatMicrosoft.raw16Khz16BitMonoPcm,
+        amazon: (): AudioOutputStreamFormatAmazon => AudioOutputStreamFormatAmazon.pcm,
       });
 
       const audioOptions = new ConvertAudioOptionsUniversal({

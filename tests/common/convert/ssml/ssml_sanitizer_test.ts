@@ -3,9 +3,9 @@ import { SsmlMinimizer } from '../../../../src/common/convert/input/ssml/ssml_mi
 import { 
   SampleSsmlContent
 } from './mocks/ssml_mocks.js';
-import { GOOGLE_SSML_ALLOWED_ELEMENTS } from '../../../../src/common/convert/input/ssml/schemas/google_ssml_schema.js';
-import { MICROSOFT_SSML_ALLOWED_ELEMENTS } from '../../../../src/common/convert/input/ssml/schemas/microsoft_ssml_schema.js';
-import { AMAZON_SSML_ALLOWED_ELEMENTS } from '../../../../src/common/convert/input/ssml/schemas/amazon_ssml_schema.js';
+import { GOOGLE_SSML_ALLOWED_ELEMENTS } from '../../../../src/google/convert/input/ssml/ssml_schema.js';
+import { MICROSOFT_SSML_ALLOWED_ELEMENTS } from '../../../../src/microsoft/convert/input/ssml/ssml_schema.js';
+import { AMAZON_SSML_ALLOWED_ELEMENTS } from '../../../../src/amazon/convert/input/ssml/ssml_schema.js';
 
 describe('SsmlSanitizer Tests', () => {
   describe('Basic Tag Sanitization', () => {
